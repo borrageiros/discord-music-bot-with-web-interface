@@ -1,0 +1,35 @@
+{
+  "name": "Musigeiros",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "borrageiros",
+  "license": "MIT",
+  "scripts": {
+    "installation": "yarn && cd client && yarn",
+    "start": "concurrently \"npm run serve:server\" \"npm run serve:client\"",
+    "serve:server": "nodemon src/index.js",
+    "serve:client": "cd client && npm run dev",
+    "dev": "concurrently \"npm run serve:server\" \"npm run serve:client\""
+  },
+  "dependencies": {
+    "@discord-player/extractor": "^4.4.6",
+    "@discordjs/opus": "^0.9.0",
+    "@discordjs/voice": "^0.16.1",
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "body-parser": "^1.20.1",
+    "concurrently": "^7.5.0",
+    "cors": "^2.8.5",
+    "discord-player": "^6.6.7",
+    "discord.js": "^14.14.1",
+    "express": "^4.18.2",
+    "mediaplex": "^0.0.9",
+    "opusscript": "^0.1.1",
+    "socket.io": "^4.7.4",
+    "spotify-web-api-node": "^5.0.2",
+    "youtube-search-api": "^1.2.1",
+    "ytdl-core": "^4.11.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
