@@ -168,6 +168,12 @@
     <div class="track-title">
       <p>{ appStatus.currentTrack ? appStatus.currentTrack.title : "" }</p>
       <p>{ appStatus.currentTrack ? appStatus.currentTrack.author : "" }</p>
+      {#if appStatus.currentTrack && appStatus.currentTrack.duration === "0:00"}
+        <div class="on-live">
+          <p>🔴 On Live</p>
+          <p>{ secondsToMinute(currentDurationInSeconds) }</p>
+        </div>
+      {/if}
     </div>
   </div>
 
@@ -197,7 +203,7 @@
     </div>
 
     <div class="song-state-container">
-      {#if appStatus.currentTrack}
+      {#if appStatus.currentTrack && appStatus.currentTrack.duration !== "0:00"}
         <p>{ secondsToMinute(currentDurationInSeconds) }</p>
         <input
           class="song-state"
@@ -275,7 +281,11 @@
     white-space: nowrap; 
     overflow: hidden; 
     text-overflow: ellipsis; 
-    max-width: 15vh; 
+    max-width: 20vh; 
+  }
+
+  .on-live {
+    font-size: 2vh;
   }
 
   .controls-container {

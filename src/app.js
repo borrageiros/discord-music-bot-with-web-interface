@@ -33,13 +33,6 @@ client.on("ready", () => {
 		status: 1,
 	});
 });
-process.on('uncaughtException', (error) => {
-    console.error('Error no capturado:', error);
-});
-
-process.on('unhandledRejection', (reason, promise) => {
-    console.error('Rechazo de promesa no manejado:', promise, 'razón:', reason);
-});
 client.on("disconnect", () => {
     clientEmitter.emit('clientChanged', client);
 })
