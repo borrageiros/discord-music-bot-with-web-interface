@@ -1,13 +1,16 @@
 const express = require('express');
 const cors = require('cors');
 const { Player, GuildQueue } = require('discord-player');
-const { Client, GatewayIntentBits, ActivityType  } = require('discord.js');
+const { Client, GatewayIntentBits, ActivityType, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const { REST } = require('@discordjs/rest');
+const { Routes } = require('discord-api-types/v9');
 const http = require('http');
 const { Server } = require('socket.io');
 const EventEmitter = require('events');
 class ClientEmitter extends EventEmitter {}
 const clientEmitter = new ClientEmitter();
-
+const youtubesearchapi = require("youtube-search-api");
 
 // DISCORD
 global.client = new Client({
@@ -26,16 +29,72 @@ client.player = player;
 const queue = new GuildQueue(player, {})
 client.queue = queue;
 player.extractors.loadDefault();
+
 client.on("ready", () => {
     console.log(`Logged to discord with name: ${client.user.username}`);
 	client.user.setPresence({
 		activities: [{ name: `${client.config.app.activity}`, type: ActivityType[client.config.app.activityType] }],
 		status: 1,
 	});
+    const command = new SlashCommandBuilder()
+        .setName('play')
+        .setDescription('Open the web reproducer and play a song')
+        .addStringOption(option => 
+            option.setName('song')
+                .setDescription('URL or track name to play')
+                .setRequired(true)
+    );
+    const commands = [
+        command.toJSON()
+    ];
+    const rest = new REST({ version: '9' }).setToken(client.config.app.token);
+    (async () => {
+        try {
+            await rest.put(
+                Routes.applicationGuildCommands(client.user.id, client.config.app.guild),
+                { body: commands },
+            );
+        } catch (error) {
+            console.error(error);
+        }
+    })();
 });
+
+client.on("interactionCreate", async interaction => {
+    if (!interaction.isCommand()) return;
+    const { commandName } = interaction;
+    
+    if (commandName  === 'play') {
+        try {
+            const query = interaction.options.getString('song');
+            const videos = await youtubesearchapi.GetListByKeyword(query)
+            const filteredVideos = videos.items.filter(item => item.type === 'video');
+            let maxArea = 0;
+            let largestThumbnailUrl = '';
+            filteredVideos[0].thumbnail.thumbnails.forEach(video => {
+                let area = video.width * video.height;
+                if (area > maxArea) {
+                    maxArea = area;
+                    largestThumbnailUrl = video.url;
+                }
+            });
+            const exampleEmbed = new EmbedBuilder()
+            .setColor(0xe838cd)
+            .setTitle(`Click here to reproduce this song on ${client.user.username}`)
+            .setURL( client.config.app.frontUrl + "/?channel=" + interaction.member.voice.channelId + "&track=https://www.youtube.com/watch?v=" + filteredVideos[0].id )
+            .setDescription(filteredVideos[0].title)
+            .setImage(largestThumbnailUrl)
+            await interaction.reply({ embeds: [exampleEmbed] });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+});
+
 client.on("disconnect", () => {
     clientEmitter.emit('clientChanged', client);
 })
+
 client.login(client.config.app.token);
 module.exports = { client, clientEmitter };
 // DISCORD

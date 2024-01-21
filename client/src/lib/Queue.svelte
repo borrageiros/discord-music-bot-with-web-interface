@@ -1,8 +1,26 @@
 <script>
     export let appStatus;
+    let trackParam;
+    let channelParam;
+    import { onMount } from 'svelte';
     import PlaySvg from '/icons/play.svg'
     import { playSong } from '../api';
     import SongCard from './SongCard.svelte';
+
+    onMount(async () => {
+        try {
+            const queryParams = new URLSearchParams(window.location.search);
+            trackParam = queryParams.get('track');
+            channelParam = queryParams.get('channel');
+            if ( trackParam && channelParam ){
+                await playSong(trackParam, channelParam )
+                const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+                window.location.href = newUrl;
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    })
 
     let searchQuery = '';
     
