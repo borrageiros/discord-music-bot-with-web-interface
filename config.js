@@ -6,6 +6,7 @@ module.exports = {
         activityType: "Playing",
         activity: "music",
         invite: "",
+        frontUrl: "http://localhost:5173",
         discordPlayer: {
             ytdlOptions: {
                 quality: 'highestaudio',
