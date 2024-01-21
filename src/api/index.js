@@ -18,7 +18,25 @@ const getCurrentTrack = require('./commands/get-current-track.route');
 
 router.get('/', (req, res) => {
   res.status(200).json({
-    message: '🍕 Api route 🍕',
+    message: 'Api',
+    endpoints: {
+      play: '/play',
+      pause: '/pause',
+      resume: '/resume',
+      connect: '/connect',
+      skip: '/skip',
+      seek: '/seek',
+      toggleShuffle: '/toggle-shuffle',
+      toggleRepeat: '/toggle-repeat',
+      getAppStatus: '/get-app-status',
+      getQueue: '/get-queue',
+      setVolume: '/set-volume',
+      getChannels: '/get-channels',
+      youtubeSearcher: '/youtube-searcher',
+      spotifySearcher: '/spotify-searcher',
+      deleteTrack: '/delete-track',
+      getCurrentTrack: '/get-current-track'
+    }
   });
 });
 
