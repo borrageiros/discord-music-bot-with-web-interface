@@ -32,7 +32,6 @@
       });
 
       socket.on('updateVariable', ( data ) => {
-      console.log("🔴 - App.svelte::35 - data ->", data);
           appStatus = { ...appStatus, ...data };
       });
 

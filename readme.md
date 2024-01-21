@@ -48,12 +48,13 @@ yarn installation
     ```
     module.exports = {
         app: {
-            token: "",                  // Bot Secret Token
-            author: 'borrageiros',      // Author
-            guild: '',                  // Discord Server Id 
-            activityType: "Listening",  // Activity of the bot: "Streaming", "Listening", "Watching", "Playing"
-            activity: "music",          // Text after the activityType, this example: Listening to music
-            invite: "",                 // OPTIONAL - invite url
+            token: "",                          // Bot Secret Token
+            author: 'borrageiros',              // Author
+            guild: '',                          // Discord Server Id 
+            activityType: "Listening",          // Activity of the bot: "Streaming", "Listening", "Watching", "Playing"
+            activity: "music",                  // Text after the activityType, this example: Listening to music
+            invite: "",                         // OPTIONAL - invite url
+            frontUrl: "http://localhost:5173",  // Front app url (web)
             discordPlayer: {
                 ytdlOptions: {
                     quality: 'highestaudio',
