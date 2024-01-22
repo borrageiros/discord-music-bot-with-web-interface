@@ -126,7 +126,6 @@
 
 <style>
     .searcher-container{
-        margin: 0.5vh;
         height: 100%;
         background-color: black;
         overflow: scroll;

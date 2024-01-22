@@ -34,8 +34,7 @@
 
 <style>
     .channel-chooser-container{
-        margin: 0.5vh;
-        height: 20%;
+        height: 100%;
         background-color: black;
         overflow: hidden;
     }

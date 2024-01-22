@@ -1,11 +1,12 @@
 <script>
-    export let appStatus;
-    let trackParam;
-    let channelParam;
+    import SongCard from './SongCard.svelte';
     import { onMount } from 'svelte';
     import PlaySvg from '/icons/play.svg'
     import { playSong } from '../api';
-    import SongCard from './SongCard.svelte';
+
+    export let appStatus;
+    let trackParam;
+    let channelParam;
 
     onMount(async () => {
         try {
@@ -42,7 +43,8 @@
             type="text" 
             bind:value={searchQuery}
             on:keydown={handleKeyDown}
-            placeholder="Add link to queue...">
+            placeholder="Add link to queue..."
+        >
     </div>
     <div class="queue-results">
         {#if appStatus && appStatus.tracks[0] && appStatus.tracks[0].id}
@@ -64,8 +66,7 @@
 
 <style>
     .queue-container{
-        margin: 0.5vh;
-        height: 80%;
+        height: 100%;
         background-color: black;
         overflow: scroll;
         overflow-x: hidden;
@@ -90,7 +91,7 @@
         height: 5vh;
     }
     .queue-input{
-        width: 80%;
+        width: 50%;
         margin-right: 1vh;
         height: 3vh;
         padding: 2vh;
