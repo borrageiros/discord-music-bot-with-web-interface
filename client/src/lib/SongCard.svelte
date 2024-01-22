@@ -4,7 +4,7 @@
     export let id, title, channelTitle, url, img, isQueue;
     import TrashCanSvg from '/icons/trash-can.svg';
     import PlaySvg from '/icons/play.svg';
-    import Loader from '/icons/loader.svg';
+    import loader from '/icons/loader.svg';
     let isLoading;
 
     import { playSong, deleteTrack, getCurrentTrack, skip, getAppStatus } from '../api';
@@ -73,13 +73,13 @@
                 <img class="trash-can-svg" src={TrashCanSvg} alt="delete" on:click={handleDeleteTrack} on:keydown={handleDeleteKeyPress}>
             {/if}
         {:else}
-            <img class="play-svg" src={Loader} alt="Loader" />
+            <img class="play-svg" src={loader} alt="loader" />
         {/if}
     {:else}
         {#if !isLoading}
             <img class="play-svg" src={PlaySvg} alt="play" on:click={handlePlaySong} on:keydown={handleKeyPress}>
         {:else}
-            <img class="play-svg" src={Loader} alt="Loader" />
+            <img class="play-svg" src={loader} alt="loader" />
         {/if}
     {/if}
 </div>
