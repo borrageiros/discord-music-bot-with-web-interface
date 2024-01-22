@@ -4,7 +4,7 @@
     export let id, title, channelTitle, url, img, isQueue;
     import TrashCanSvg from '/icons/trash-can.svg';
     import PlaySvg from '/icons/play.svg';
-    import Loader from '/icons/Loader.svg';
+    import Loader from '/icons/loader.svg';
     let isLoading;
 
     import { playSong, deleteTrack, getCurrentTrack, skip, getAppStatus } from '../api';
