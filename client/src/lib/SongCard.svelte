@@ -19,6 +19,24 @@
 
     const dispatch = createEventDispatcher();
 
+    async function handleDivClick() {
+        if ( isQueue && !isLoading ) {
+            if ( isCurrentTrack) {
+                handleSkip();
+            }else {
+                handleDeleteTrack();
+            }
+        }else {
+            handlePlaySong();
+        }
+    }
+
+    function handleDivClickKeyPress(event) {
+        if (event.key === 'Enter') {
+            handleDivClick();
+        }
+    }
+
     async function handlePlaySong() {
         isLoading = true;
         await playSong( url, await getLocalStorage("channel")  );
@@ -52,12 +70,12 @@
 
     function handleSkipKeyPress(event) {
         if (event.key === 'Enter') {
-        handleSkip();
+            handleSkip();
         }
     }
 </script>
 
-<div class="track-card">
+<div class="track-card" on:click={handleDivClick} on:keydown={handleDivClickKeyPress} >
     <div class="track-info-container">
         <img class="track-img" src={img} alt="">
         <div class="track-info">
@@ -98,6 +116,7 @@
         align-items: center;
         justify-content: space-between;
         text-align: left;
+        cursor: pointer;
     }
     .track-info-container{
         height: inherit;
@@ -105,6 +124,7 @@
         align-items: center;
     }
     .track-img{
+        width: 20vh;
         max-height: 70%;
         margin: 2vh;
     }
@@ -123,7 +143,6 @@
         color: gray;
     }
     .play-svg, .trash-can-svg{
-        cursor: pointer;
         height: 5vh;
         margin: 2vh;
     }
