@@ -45,30 +45,46 @@
 
 <main>
   <div class="windows" style={ appStatus.isPlaying ? "height: 82vh;" : "height: 98vh;"}>
-    <div class="queue">
-      <Queue appStatus={appStatus} />
-      <ChannelChooser appStatus={appStatus} />
-    </div>
-    <div class="searcher">
+    <div class="left-side">
       <Searcher />
     </div>
+    <div class="right-side">
+      <div class="queue">
+        <Queue appStatus={appStatus} />
+      </div>
+      <div class="channel-chooser">
+        <ChannelChooser appStatus={appStatus} />
+      </div>
+    </div>
   </div>
-  {#if appStatus.isPlaying}
-    <Player appStatus={appStatus} />
-  {/if}
+  <div class="player">
+    {#if appStatus.isPlaying}
+      <Player appStatus={appStatus} />
+    {/if}
+  </div>
 </main>
 
 <style>
   .windows{
-    height: 82vh;
     width: 100%;
     display: flex;
     justify-content: space-around;
   }
-   .queue {
-    width: 33%;
+  .windows > div{
+    margin: 1vh;
   }
-  .searcher {
-    width: 66%;
+  .left-side {
+    height: 100%;
+    width: 67%;
+  }
+  .right-side {
+    width: 33%;
+    height: 100%;
+  }
+  .queue{
+    height: 80%;
+  }
+  .channel-chooser{
+    height: 20%;
   }
 </style>
