@@ -176,7 +176,6 @@
       {#if appStatus.currentTrack && appStatus.currentTrack.duration === "0:00"}
         <div class="on-live">
           <p>🔴 On Live</p>
-          <p>{ secondsToMinute(currentDurationInSeconds) }</p>
         </div>
       {/if}
     </div>
@@ -261,7 +260,6 @@
     width: 99%;
     height: 15vh;
     background-color: black;
-    border-radius: 25px;
     margin: 1vh;
     position: fixed;
     bottom: 0;
