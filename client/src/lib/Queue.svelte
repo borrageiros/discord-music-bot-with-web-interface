@@ -35,7 +35,7 @@
 </script>
 
 <div class="queue-container">
-    <div class="queue">
+    <div class="queue sticky-searcher">
         <img class="queue-logo" src={PlaySvg} alt="">
         <input 
             class="queue-input" 
@@ -72,6 +72,15 @@
     }
     .queue{
         min-height: 9vh;
+        border-bottom: solid 2px #242424;
+        display: flex;
+        align-items: center;
+    }
+    .sticky-searcher {
+        position: sticky;
+        top: 0;
+        z-index: 999;
+        background-color: black;
         border-bottom: solid 2px #242424;
         display: flex;
         align-items: center;

@@ -1,8 +1,7 @@
 <script>
   import io from 'socket.io-client';
   import Player from './lib/Player.svelte';
-  import YoutubeSearcher from './lib/YoutubeSearcher.svelte';
-  import SpotifySearcher from './lib/SpotifySearcher.svelte';
+  import Searcher from './lib/Searcher.svelte';
   import Queue from './lib/Queue.svelte';
   import ChannelChooser from './lib/ChannelChooser.svelte';
   import { onMount } from 'svelte';
@@ -45,19 +44,18 @@
 
 
 <main>
-  <div class="windows">
-    <div class="youtube">
-      <YoutubeSearcher />
-    </div>
+  <div class="windows" style={ appStatus.isPlaying ? "height: 82vh;" : "height: 98vh;"}>
     <div class="queue">
       <Queue appStatus={appStatus} />
       <ChannelChooser appStatus={appStatus} />
     </div>
-    <div class="spotify">
-      <SpotifySearcher />
+    <div class="searcher">
+      <Searcher />
     </div>
   </div>
-  <Player appStatus={appStatus} />
+  {#if appStatus.isPlaying}
+    <Player appStatus={appStatus} />
+  {/if}
 </main>
 
 <style>
@@ -67,7 +65,10 @@
     display: flex;
     justify-content: space-around;
   }
-  .youtube, .queue, .spotify{
+   .queue {
     width: 33%;
+  }
+  .searcher {
+    width: 66%;
   }
 </style>

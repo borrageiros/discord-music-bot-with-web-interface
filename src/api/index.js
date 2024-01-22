@@ -11,8 +11,7 @@ const getAppStatus = require('./commands/get-app-status.route');
 const getQueue = require('./commands/get-queue.route');
 const setVolume = require('./commands/set-volume.route');
 const getChannels = require('./commands/get-channels.route');
-const youtubeSearcher = require('./commands/youtube-searcher.route');
-const spotifySearcher = require('./commands/spotify-searcher.route');
+const searcher = require('./commands/searcher.route');
 const deleteTrack = require('./commands/delete-track.route');
 const getCurrentTrack = require('./commands/get-current-track.route');
 
@@ -32,8 +31,7 @@ router.get('/', (req, res) => {
       getQueue: '/get-queue',
       setVolume: '/set-volume',
       getChannels: '/get-channels',
-      youtubeSearcher: '/youtube-searcher',
-      spotifySearcher: '/spotify-searcher',
+      searcher: '/searcher',
       deleteTrack: '/delete-track',
       getCurrentTrack: '/get-current-track'
     }
@@ -53,8 +51,7 @@ router.use('/get-app-status', getAppStatus);
 router.use('/get-channels', getChannels);
 router.use('/set-volume', setVolume);
 router.use('/get-queue', getQueue);
-router.use('/youtube-searcher', youtubeSearcher);
-router.use('/spotify-searcher', spotifySearcher);
+router.use('/searcher', searcher);
 router.use('/delete-track', deleteTrack);
 router.use('/get-current-track', getCurrentTrack);
 

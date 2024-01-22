@@ -78,37 +78,14 @@ export async function seek(milliseconds) {
 
 
 // --------------------------------------------------------------
-export async function youtubeSearcher(query) {
+export async function searcher(query, engine) {
     try {
-        const response = await fetch(url+"/youtube-searcher", {
+        const response = await fetch(url+"/searcher", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ query })
-        });
-        
-        if (!response.ok) {
-            throw new Error(`Error HTTP: ${response.status}`);
-        }
-
-        return await response.json();
-    } catch (error) {
-        throw error;
-    }
-}
-// --------------------------------------------------------------
-
-
-// --------------------------------------------------------------
-export async function spotifySearcher(query) {
-    try {
-        const response = await fetch(url+"/spotify-searcher", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ query })
+            body: JSON.stringify({ query: query, engine: engine })
         });
         
         if (!response.ok) {
