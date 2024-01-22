@@ -2,9 +2,10 @@
     import { createEventDispatcher, onMount } from 'svelte';
     import { getLocalStorage } from '../localStorage';
     export let id, title, channelTitle, url, img, isQueue;
-
     import TrashCanSvg from '/icons/trash-can.svg';
     import PlaySvg from '/icons/play.svg';
+    import Loader from '/icons/Loader.svg';
+    let isLoading;
 
     import { playSong, deleteTrack, getCurrentTrack, skip, getAppStatus } from '../api';
 
@@ -19,6 +20,7 @@
     const dispatch = createEventDispatcher();
 
     async function handlePlaySong() {
+        isLoading = true;
         await playSong( url, await getLocalStorage("channel")  );
         dispatch('remove');
     }
@@ -29,8 +31,10 @@
     }
 
     async function handleDeleteTrack() {
+        isLoading = true;
         await deleteTrack(url);
         dispatch('remove');
+        isLoading = false;
     }
 
     function handleDeleteKeyPress(event) {
@@ -40,8 +44,10 @@
     }
 
     async function handleSkip() {
+        isLoading = true;
         await skip();
         setTimeout(getAppStatus, 2000);
+        setTimeout( () => isLoading = false, 2000 );
     }
 
     function handleSkipKeyPress(event) {
@@ -60,13 +66,21 @@
         </div>
     </div>
     {#if isQueue}
-        {#if isCurrentTrack}
-            <img class="trash-can-svg" src={TrashCanSvg} alt="delete" on:click={handleSkip} on:keydown={handleSkipKeyPress}>
+        {#if !isLoading}
+            {#if isCurrentTrack}
+                <img class="trash-can-svg" src={TrashCanSvg} alt="delete" on:click={handleSkip} on:keydown={handleSkipKeyPress}>
+            {:else}
+                <img class="trash-can-svg" src={TrashCanSvg} alt="delete" on:click={handleDeleteTrack} on:keydown={handleDeleteKeyPress}>
+            {/if}
         {:else}
-            <img class="trash-can-svg" src={TrashCanSvg} alt="delete" on:click={handleDeleteTrack} on:keydown={handleDeleteKeyPress}>
+            <img class="play-svg" src={Loader} alt="Loader" />
         {/if}
     {:else}
-        <img class="play-svg" src={PlaySvg} alt="play" on:click={handlePlaySong} on:keydown={handleKeyPress}>
+        {#if !isLoading}
+            <img class="play-svg" src={PlaySvg} alt="play" on:click={handlePlaySong} on:keydown={handleKeyPress}>
+        {:else}
+            <img class="play-svg" src={Loader} alt="Loader" />
+        {/if}
     {/if}
 </div>
 
