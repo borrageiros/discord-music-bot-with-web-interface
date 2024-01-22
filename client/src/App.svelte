@@ -83,8 +83,9 @@
   }
   .queue{
     height: 80%;
+    margin-bottom: 1vh;
   }
   .channel-chooser{
-    height: 20%;
+    height: 19%;
   }
 </style>
