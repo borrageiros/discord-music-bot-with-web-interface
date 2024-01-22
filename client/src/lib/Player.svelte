@@ -2,16 +2,18 @@
   export let appStatus;
 
   // ASSETS SVG
-  import playSvg from '/icons/play.svg'
-  import pauseSvg from '/icons/pause.svg'
-  import forwardStepSvg from '/icons/forward-step.svg'
-  import backwardStepSvg from '/icons/backward-step.svg'
-  import repeatSvg from '/icons/repeat.svg'
-  import repeatOnSvg from '/icons/repeat-on.svg'
-  import shuffleSvg from '/icons/shuffle.svg'
-  import shuffleOnSvg from '/icons/shuffle-on.svg'
-  import volumeOn from '/icons/volume-on.svg'
-  import volumeOff from '/icons/volume-off.svg'
+  import playSvg from '/icons/play.svg';
+  import pauseSvg from '/icons/pause.svg';
+  import forwardStepSvg from '/icons/forward-step.svg';
+  import backwardStepSvg from '/icons/backward-step.svg';
+  import repeatSvg from '/icons/repeat.svg';
+  import repeatOnSvg from '/icons/repeat-on.svg';
+  import shuffleSvg from '/icons/shuffle.svg';
+  import shuffleOnSvg from '/icons/shuffle-on.svg';
+  import volumeOn from '/icons/volume-on.svg';
+  import volumeOff from '/icons/volume-off.svg';
+  import loader from '/icons/loader.svg';
+  // ASSETS SVG
 
   import { onDestroy } from 'svelte';
   import { setVolume, pause, resume, skip, getAppStatus, toggleShuffle, toggleRepeat, seek } from '../api';
@@ -20,6 +22,7 @@
   let userIsInteracting = false;
   let currentDurationInSeconds = 0;
   let interval;
+  let isSkipping = false;
   
   $: if (appStatus.volume !== volume && !userIsInteracting) {
     volume = appStatus.volume;
@@ -127,8 +130,10 @@
   }
 
   async function handleSkip() {
+    isSkipping = true;
     await skip();
     setTimeout(getAppStatus, 2000);
+    setTimeout( () => isSkipping = false, 2000);
   }
 
   function handleSkipKeyPress(event) {
@@ -187,12 +192,18 @@
       {/if}
       
       <img class="backward-step-svg" src={backwardStepSvg} alt="backward-step">
+
       {#if appStatus.isPlaying}
         <img class="pause-svg" src={pauseSvg} alt="pause" on:click={handlePause} on:keydown={handlePauseKeyPress}>
       {:else}
         <img class="play-svg" src={playSvg} alt="play" on:click={handleResume} on:keydown={handleResumeKeyPress}>
       {/if}
-      <img class="forward-step-svg" src={forwardStepSvg} alt="forward-step" on:click={handleSkip} on:keydown={handleSkipKeyPress}>
+
+      {#if !isSkipping}
+        <img class="forward-step-svg" src={forwardStepSvg} alt="forward-step" on:click={handleSkip} on:keydown={handleSkipKeyPress}>
+      {:else}
+        <img class="play-svg" src={loader} alt="loader" />
+      {/if}
       
       {#if appStatus.repeat === 1}
         <img class="repeat-on-svg" src={repeatOnSvg} alt="repeat-on" on:click={handleRepeat} on:keydown={handleRepeatKeyPress} >
