@@ -47,6 +47,8 @@
         {#each results as track}
             <SongCard
                 isQueue={false}
+                duration={""}
+                isLive={false}
                 id={track.id}
                 title={track.title}
                 channelTitle={track.channelTitle}

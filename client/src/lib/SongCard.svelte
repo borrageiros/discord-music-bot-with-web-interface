@@ -1,7 +1,7 @@
 <script>
     import { createEventDispatcher, onMount } from 'svelte';
     import { getLocalStorage } from '../localStorage';
-    export let id, title, channelTitle, url, img, isQueue;
+    export let id, title, channelTitle, url, img, isQueue, isLive, duration;
     import TrashCanSvg from '/icons/trash-can.svg';
     import PlaySvg from '/icons/play.svg';
     import loader from '/icons/loader.svg';
@@ -61,8 +61,13 @@
     <div class="track-info-container">
         <img class="track-img" src={img} alt="">
         <div class="track-info">
-            <p>{title}</p>
+            <p class="track-title">{title}</p>
             <p class="channel-title" >{channelTitle}</p>
+            {#if !isLive}
+                <p class="channel-title" >{ duration ? duration : "" }</p>
+            {:else}
+                <p class="channel-title" >{ isLive && "🔴 Live" }</p>
+            {/if}
         </div>
     </div>
     {#if isQueue}
@@ -103,8 +108,16 @@
         max-height: 70%;
         margin: 2vh;
     }
+
+    .track-title {
+        line-height: 1.2em;
+        max-height: 2.4em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
     .track-info{
         margin: 2vh;
+        font-size: 1.5vh;
     }
     .channel-title{
         color: gray;
