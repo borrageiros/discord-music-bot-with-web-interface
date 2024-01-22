@@ -51,8 +51,8 @@
             {#each appStatus.tracks as track}
                 <SongCard
                     isQueue={true}
-                    isLive={ track.isLive ? track.isLive : false }
-                    duration={ !track.isLive && track.length && track.length.simpleText }
+                    isLive={ track.durationMS === 0 && !track.url.includes("apple") ? true : false }
+                    duration={ track.duration && !track.url.includes("apple") ? track.duration : "" }
                     id={track.id}
                     title={track.title}
                     channelTitle={track.author}
