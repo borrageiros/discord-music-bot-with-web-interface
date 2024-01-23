@@ -44,7 +44,7 @@
 
 
 <main>
-  <div class="windows" style={ appStatus.isPlaying ? "height: 82vh;" : "height: 98vh;"}>
+  <div class="windows" style={ appStatus.tracks ? "height: 82vh;" : "height: 98vh;"}>
     <div class="left-side">
       <Searcher />
     </div>
