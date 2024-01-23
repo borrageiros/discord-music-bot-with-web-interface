@@ -58,7 +58,7 @@
     </div>
   </div>
   <div class="player">
-    {#if appStatus.isPlaying}
+    {#if appStatus.tracks}
       <Player appStatus={appStatus} />
     {/if}
   </div>
