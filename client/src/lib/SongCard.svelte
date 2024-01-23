@@ -155,8 +155,8 @@
         flex-grow: 1;
     }
     .track-img {
-        width: 20vh;
-        max-height: 70%;
+        max-height: 12vh;
+        max-width: auto;
         margin: 2vh;
     }
     .track-info {
