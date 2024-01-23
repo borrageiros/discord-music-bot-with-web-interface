@@ -10,7 +10,6 @@ const { Server } = require('socket.io');
 const EventEmitter = require('events');
 class ClientEmitter extends EventEmitter {}
 const clientEmitter = new ClientEmitter();
-const youtubesearchapi = require("youtube-search-api");
 
 // DISCORD
 global.client = new Client({
@@ -67,23 +66,13 @@ client.on("interactionCreate", async interaction => {
     if (commandName  === 'play') {
         try {
             const query = interaction.options.getString('song');
-            const videos = await youtubesearchapi.GetListByKeyword(query)
-            const filteredVideos = videos.items.filter(item => item.type === 'video');
-            let maxArea = 0;
-            let largestThumbnailUrl = '';
-            filteredVideos[0].thumbnail.thumbnails.forEach(video => {
-                let area = video.width * video.height;
-                if (area > maxArea) {
-                    maxArea = area;
-                    largestThumbnailUrl = video.url;
-                }
-            });
+            const results = await client.player.search(query, { searchEngine: "youtube" });
             const exampleEmbed = new EmbedBuilder()
             .setColor(0xe838cd)
             .setTitle(`Click here to reproduce this song on ${client.user.username}`)
-            .setURL( client.config.app.frontUrl + "/?channel=" + interaction.member.voice.channelId + "&track=https://www.youtube.com/watch?v=" + filteredVideos[0].id )
-            .setDescription(filteredVideos[0].title)
-            .setImage(largestThumbnailUrl)
+            .setURL( client.config.app.frontUrl + "/?channel=" + interaction.member.voice.channelId + "&track=https://www.youtube.com/watch?v=" + results.tracks[0].id )
+            .setDescription(results.tracks[0].title)
+            .setImage(results.tracks[0].thumbnail)
             await interaction.reply({ embeds: [exampleEmbed] });
         } catch (error) {
             console.error(error);

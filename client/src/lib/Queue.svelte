@@ -48,16 +48,18 @@
     </div>
     <div class="queue-results">
         {#if appStatus && appStatus.tracks[0] && appStatus.tracks[0].id}
-            {#each appStatus.tracks as track}
+            {#each appStatus.tracks as track, index}
                 <SongCard
-                    isQueue={true}
-                    isLive={ track.durationMS === 0 && !track.url.includes("apple") ? true : false }
-                    duration={ track.duration && !track.url.includes("apple") ? track.duration : "" }
                     id={track.id}
                     title={track.title}
                     channelTitle={track.author}
                     url={track.url}
                     img={track.thumbnail}
+                    isQueue={true}
+                    isLive={ track.durationMS === 0 && !track.url.includes("apple") ? true : false }
+                    duration={ track.duration && !track.url.includes("apple") ? track.duration : "" }
+                    arrayPosition={index}
+                    isLastItem={ index === appStatus.tracks.length - 1 }
                 />
             {/each}
         {/if}    

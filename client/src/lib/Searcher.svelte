@@ -106,7 +106,7 @@
             <img src={LoaderSvg} alt="Loading..." class="loader" />
         {:else}
             {#key results}
-                {#each results as track}
+                {#each results as track, index}
                     <SongCard
                         isQueue={ false }
                         isLive={ track.durationMS === 0 && selectedEngine != "appleMusicSearch" ? true : false }
@@ -116,6 +116,8 @@
                         channelTitle={ track.author }
                         url={ track.url }
                         img={ track.thumbnail }
+                        arrayPosition={index}
+                        isLastItem={ index === results.length - 1 }
                         on:remove={() => removeSong(track.id)}
                     />
                 {/each}
