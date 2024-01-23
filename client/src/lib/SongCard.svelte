@@ -1,7 +1,10 @@
 <script>
     import { createEventDispatcher, onMount } from 'svelte';
     import { getLocalStorage } from '../localStorage';
-    export let id, title, channelTitle, url, img, isQueue, isLive, duration;
+    import { moveTrack } from '../api';
+    export let id, title, channelTitle, url, img, isQueue, isLive, duration, arrayPosition, isLastItem;
+    import ArrowDown from '/icons/arrow-down.svg';
+    import ArrowUp from '/icons/arrow-up.svg';
     import TrashCanSvg from '/icons/trash-can.svg';
     import PlaySvg from '/icons/play.svg';
     import loader from '/icons/loader.svg';
@@ -20,13 +23,7 @@
     const dispatch = createEventDispatcher();
 
     async function handleDivClick() {
-        if ( isQueue && !isLoading ) {
-            if ( isCurrentTrack) {
-                handleSkip();
-            }else {
-                handleDeleteTrack();
-            }
-        }else {
+        if ( !isQueue && !isLoading ) {
             handlePlaySong();
         }
     }
@@ -73,9 +70,35 @@
             handleSkip();
         }
     }
+
+    async function handleArrowUp() {
+        await handleMoveTrack(arrayPosition, arrayPosition - 1);
+        setTimeout(getAppStatus, 2000)
+    }
+
+    function handleArrowUpKeyPress(event) {
+        if (event.key === 'Enter') {
+            handleArrowUp();
+        }
+    }
+
+    async function handleArrowDown() {
+        await handleMoveTrack(arrayPosition, arrayPosition + 1);
+        setTimeout(getAppStatus, 2000)
+    }
+
+    function handleArrowDownKeyPress(event) {
+        if (event.key === 'Enter') {
+            handleArrowDown();
+        }
+    }
+
+    async function handleMoveTrack( from, to ) {
+        await moveTrack( from - 1 , to - 1 );
+    }
 </script>
 
-<div class="track-card" on:click={handleDivClick} on:keydown={handleDivClickKeyPress} >
+<div class="track-card" style={!isQueue && "cursor: pointer;"} on:click={handleDivClick} on:keydown={handleDivClickKeyPress} >
     <div class="track-info-container">
         <img class="track-img" src={img} alt="">
         <div class="track-info">
@@ -90,6 +113,14 @@
     </div>
     {#if isQueue}
         {#if !isLoading}
+            <div class="move-track-controls">
+                {#if arrayPosition >= 2}
+                    <img class="arrow-svg" src={ArrowUp} alt="delete" on:click={handleArrowUp} on:keydown={handleArrowUpKeyPress}>
+                {/if}
+                {#if arrayPosition >= 1 && !isLastItem}
+                    <img class="arrow-svg" src={ArrowDown} alt="delete" on:click={handleArrowDown} on:keydown={handleArrowDownKeyPress}>
+                {/if}
+            </div>
             {#if isCurrentTrack}
                 <img class="trash-can-svg" src={TrashCanSvg} alt="delete" on:click={handleSkip} on:keydown={handleSkipKeyPress}>
             {:else}
@@ -108,7 +139,7 @@
 </div>
 
 <style>
-    .track-card{
+    .track-card {
         border: solid 2px #242424;
         width: 100%;
         height: 15vh;
@@ -116,34 +147,45 @@
         align-items: center;
         justify-content: space-between;
         text-align: left;
-        cursor: pointer;
+        padding: 1vh;
     }
-    .track-info-container{
-        height: inherit;
+    .track-info-container {
         display: flex;
         align-items: center;
+        flex-grow: 1;
     }
-    .track-img{
+    .track-img {
         width: 20vh;
         max-height: 70%;
         margin: 2vh;
     }
-
-    .track-title {
-        line-height: 1.2em;
-        max-height: 2.4em;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    .track-info{
+    .track-info {
         margin: 2vh;
         font-size: 1.5vh;
     }
-    .channel-title{
+    .channel-title {
         color: gray;
     }
-    .play-svg, .trash-can-svg{
+    .move-track-controls {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        flex-grow: 0;
+        flex-shrink: 0;
+        height: 100%;
+        align-self: flex-end;
+    }
+    .arrow-svg, .arrow-svg {
+        max-height: 3vh;
+        margin: 1vh;
+        cursor: pointer;
+    }
+    .arrow-svg:hover, .arrow-svg:hover {
+        filter: grayscale(60%);
+    }
+    .play-svg, .trash-can-svg {
         height: 5vh;
         margin: 2vh;
+        cursor: pointer;
     }
 </style>

@@ -2,7 +2,7 @@
     import SongCard from './SongCard.svelte';
     import { onMount } from 'svelte';
     import PlaySvg from '/icons/play.svg'
-    import { playSong, moveTrack } from '../api';
+    import { playSong } from '../api';
 
     export let appStatus;
     let trackParam;
@@ -33,41 +33,6 @@
             sendLink();
         }
     }
-
-    let draggedItem = null;
-    let overItem = null;
-
-    function handleDragStart(event, track) {
-        draggedItem = track;
-        event.dataTransfer.effectAllowed = 'move';
-        event.dataTransfer.setData('text/html', event.target.innerHTML);
-    }
-
-    function handleDragOver(event, track) {
-        event.preventDefault();
-        event.dataTransfer.dropEffect = 'move';
-        overItem = track;
-    }
-
-    function handleDrop(event, track) {
-        event.stopPropagation();
-        if (draggedItem && overItem && draggedItem.id !== overItem.id) {
-            const fromIndex = appStatus.tracks.indexOf(draggedItem);
-            const toIndex = appStatus.tracks.indexOf(overItem);
-            handleMoveTrack( fromIndex - 1 , toIndex - 1 );
-        }
-        draggedItem = null;
-        overItem = null;
-    }
-
-    function handleDragEnd(event) {
-        draggedItem = null;
-        overItem = null;
-    }
-
-    async function handleMoveTrack( from, to ) {
-        await moveTrack( from, to );
-    }
 </script>
 
 <div class="queue-container">
@@ -83,26 +48,19 @@
     </div>
     <div class="queue-results">
         {#if appStatus && appStatus.tracks[0] && appStatus.tracks[0].id}
-            {#each appStatus.tracks as track, index (track.id)}
-                <div class="draggable" draggable={index !== 0 && true}
-                    on:dragstart={(event) => handleDragStart(event, track)}
-                    on:dragover={(event) => handleDragOver(event, track)}
-                    on:drop={(event) => handleDrop(event, track)}
-                    on:dragend={handleDragEnd}
-                    on:click={() => draggedItem = null}
-                    on:keydown={() => draggedItem = null}
-                >
-                    <SongCard
-                        isQueue={true}
-                        isLive={ track.durationMS === 0 && !track.url.includes("apple") ? true : false }
-                        duration={ track.duration && !track.url.includes("apple") ? track.duration : "" }
-                        id={track.id}
-                        title={track.title}
-                        channelTitle={track.author}
-                        url={track.url}
-                        img={track.thumbnail}
-                    />
-                </div>
+            {#each appStatus.tracks as track, index}
+                <SongCard
+                    id={track.id}
+                    title={track.title}
+                    channelTitle={track.author}
+                    url={track.url}
+                    img={track.thumbnail}
+                    isQueue={true}
+                    isLive={ track.durationMS === 0 && !track.url.includes("apple") ? true : false }
+                    duration={ track.duration && !track.url.includes("apple") ? track.duration : "" }
+                    arrayPosition={index}
+                    isLastItem={ index === appStatus.tracks.length - 1 }
+                />
             {/each}
         {/if}    
     </div>
@@ -135,7 +93,7 @@
         height: 5vh;
     }
     .queue-input{
-        width: 80%;
+        width: 50%;
         margin-right: 1vh;
         height: 3vh;
         padding: 2vh;
