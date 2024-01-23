@@ -25,8 +25,6 @@
     "mediaplex": "^0.0.9",
     "opusscript": "^0.1.1",
     "socket.io": "^4.7.4",
-    "spotify-web-api-node": "^5.0.2",
-    "youtube-search-api": "^1.2.1",
     "ytdl-core": "^4.11.5"
   },
   "devDependencies": {

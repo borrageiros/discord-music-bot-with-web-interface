@@ -101,6 +101,29 @@ export async function searcher(query, engine) {
 
 
 // --------------------------------------------------------------
+export async function moveTrack(from, to) {
+    try {
+        const response = await fetch(url+"/move-track", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ from: from, to: to })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        throw error;
+    }
+}
+// --------------------------------------------------------------
+
+
+// --------------------------------------------------------------
 export async function setVolume(volume) {
     try {
         const response = await fetch(url+"/set-volume", {

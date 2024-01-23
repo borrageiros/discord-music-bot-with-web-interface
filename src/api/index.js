@@ -14,6 +14,7 @@ const getChannels = require('./commands/get-channels.route');
 const searcher = require('./commands/searcher.route');
 const deleteTrack = require('./commands/delete-track.route');
 const getCurrentTrack = require('./commands/get-current-track.route');
+const moveTrack = require('./commands/move-track.route');
 
 router.get('/', (req, res) => {
   res.status(200).json({
@@ -54,5 +55,6 @@ router.use('/get-queue', getQueue);
 router.use('/searcher', searcher);
 router.use('/delete-track', deleteTrack);
 router.use('/get-current-track', getCurrentTrack);
+router.use('/move-track', moveTrack);
 
 module.exports = router;
