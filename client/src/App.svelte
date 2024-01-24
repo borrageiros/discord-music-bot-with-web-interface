@@ -44,7 +44,7 @@
 
 
 <main>
-  <div class="windows" style={ appStatus.tracks ? "height: 82vh;" : "height: 98vh;"}>
+  <div class="windows" style={ appStatus.tracks[0] ? "height: 82vh;" : "height: 98vh;"}>
     <div class="left-side">
       <Searcher />
     </div>
@@ -58,7 +58,7 @@
     </div>
   </div>
   <div class="player">
-    {#if appStatus.tracks}
+    {#if appStatus.tracks[0]}
       <Player appStatus={appStatus} />
     {/if}
   </div>
