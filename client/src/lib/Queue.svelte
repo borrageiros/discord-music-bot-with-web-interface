@@ -93,7 +93,7 @@
         height: 5vh;
     }
     .queue-input{
-        width: 50%;
+        width: 80%;
         margin-right: 1vh;
         height: 3vh;
         padding: 2vh;
