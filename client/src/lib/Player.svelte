@@ -173,7 +173,7 @@
     <div class="track-title">
       <p>{ appStatus.currentTrack ? appStatus.currentTrack.title : "" }</p>
       <p>{ appStatus.currentTrack ? appStatus.currentTrack.author : "" }</p>
-      {#if appStatus.currentTrack && appStatus.currentTrack.duration === "0:00"}
+      {#if appStatus.currentTrack && appStatus.currentTrack.duration === "0:00" && !appStatus.currentTrack.url.includes("apple")}
         <div class="on-live">
           <p>🔴 On Live</p>
         </div>
