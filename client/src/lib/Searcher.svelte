@@ -43,7 +43,11 @@
 
     function selectImage(imageName) {
         selectedEngine = imageName;
-        randomSearch();
+        if ( searchQuery.length ){
+            search();
+        }else {
+            randomSearch();
+        }
     }
 
     function handleKeyDownSelectEngine(event, imageName) {
