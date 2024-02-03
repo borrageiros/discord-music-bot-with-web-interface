@@ -3,6 +3,7 @@
     import { onMount } from 'svelte';
     import { getChannels, connect } from '../api';
     import { setLocalStorage } from '../localStorage';
+    import { showNotification } from './NotificationStore';
 
     let channels = [];
     let selectedChannel;
@@ -18,8 +19,9 @@
 
     async function handleChannelSelection(event) {
         const channelId = event.target.value;
-        await connect(channelId)
-        setLocalStorage("channel", channelId)
+        await connect(channelId);
+        setLocalStorage("channel", channelId);
+        showNotification("Channel selected", "success");
     }
 </script>
 

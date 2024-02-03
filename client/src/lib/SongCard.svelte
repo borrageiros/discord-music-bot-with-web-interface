@@ -1,4 +1,5 @@
 <script>
+    import { showNotification } from './NotificationStore';
     import { createEventDispatcher, onMount } from 'svelte';
     import { getLocalStorage } from '../localStorage';
     import { moveTrack } from '../api';
@@ -7,7 +8,7 @@
     import ArrowUp from '/icons/arrow-up.svg';
     import TrashCanSvg from '/icons/trash-can.svg';
     import PlaySvg from '/icons/play.svg';
-    import loader from '/icons/loader.svg';
+    import loaderSvg from '/icons/loader.svg';
     let isLoading;
 
     import { playSong, deleteTrack, getCurrentTrack, skip, getAppStatus } from '../api';
@@ -28,47 +29,33 @@
         }
     }
 
-    function handleDivClickKeyPress(event) {
-        if (event.key === 'Enter') {
-            handleDivClick();
-        }
-    }
-
     async function handlePlaySong() {
         isLoading = true;
-        await playSong( url, await getLocalStorage("channel")  );
-        dispatch('remove');
-    }
-    function handleKeyPress(event) {
-        if (event.key === 'Enter') {
-            handlePlaySong();
+        const channel = await getLocalStorage("channel");
+        if (channel) {
+            await playSong( url, channel );
+            dispatch('remove');
+            // showNotification("Song added", "success");
+        }else {
+            showNotification("You must select a channel first", "error", 3);
+            isLoading = false;
         }
     }
 
     async function handleDeleteTrack() {
         isLoading = true;
         await deleteTrack(url);
+        showNotification("Song deleted from queue", "success");
         dispatch('remove');
         isLoading = false;
-    }
-
-    function handleDeleteKeyPress(event) {
-        if (event.key === 'Enter') {
-            handleDeleteTrack();
-        }
     }
 
     async function handleSkip() {
         isLoading = true;
         await skip();
         setTimeout(getAppStatus, 2000);
+        setTimeout( () => showNotification("Song deleted from queue", "success"), 2000)
         setTimeout( () => isLoading = false, 2000 );
-    }
-
-    function handleSkipKeyPress(event) {
-        if (event.key === 'Enter') {
-            handleSkip();
-        }
     }
 
     async function handleArrowUp() {
@@ -76,21 +63,9 @@
         setTimeout(getAppStatus, 2000)
     }
 
-    function handleArrowUpKeyPress(event) {
-        if (event.key === 'Enter') {
-            handleArrowUp();
-        }
-    }
-
     async function handleArrowDown() {
         await handleMoveTrack(arrayPosition, arrayPosition + 1);
         setTimeout(getAppStatus, 2000)
-    }
-
-    function handleArrowDownKeyPress(event) {
-        if (event.key === 'Enter') {
-            handleArrowDown();
-        }
     }
 
     async function handleMoveTrack( from, to ) {
@@ -98,7 +73,7 @@
     }
 </script>
 
-<div class="track-card" style={!isQueue && "cursor: pointer;"} on:click={handleDivClick} on:keydown={handleDivClickKeyPress} >
+<div class="track-card" style={!isQueue && "cursor: pointer;"} on:click={handleDivClick} on:keydown={handleDivClick} >
     <div class="track-info-container">
         <img class="track-img" src={img} alt="">
         <div class="track-info">
@@ -115,25 +90,25 @@
         {#if !isLoading}
             <div class="move-track-controls">
                 {#if arrayPosition >= 2}
-                    <img class="arrow-svg" src={ArrowUp} alt="delete" on:click={handleArrowUp} on:keydown={handleArrowUpKeyPress}>
+                    <img class="arrow-svg" src={ArrowUp} alt="delete" on:click={handleArrowUp} on:keydown={handleArrowUp}>
                 {/if}
                 {#if arrayPosition >= 1 && !isLastItem}
-                    <img class="arrow-svg" src={ArrowDown} alt="delete" on:click={handleArrowDown} on:keydown={handleArrowDownKeyPress}>
+                    <img class="arrow-svg" src={ArrowDown} alt="delete" on:click={handleArrowDown} on:keydown={handleArrowDown}>
                 {/if}
             </div>
             {#if isCurrentTrack}
-                <img class="trash-can-svg" src={TrashCanSvg} alt="delete" on:click={handleSkip} on:keydown={handleSkipKeyPress}>
+                <img class="trash-can-svg" src={TrashCanSvg} alt="delete" on:click={handleSkip} on:keydown={handleSkip}>
             {:else}
-                <img class="trash-can-svg" src={TrashCanSvg} alt="delete" on:click={handleDeleteTrack} on:keydown={handleDeleteKeyPress}>
+                <img class="trash-can-svg" src={TrashCanSvg} alt="delete" on:click={handleDeleteTrack} on:keydown={handleDeleteTrack}>
             {/if}
         {:else}
-            <img class="play-svg" src={loader} alt="loader" />
+            <img class="play-svg" src={loaderSvg} alt="loader" />
         {/if}
     {:else}
         {#if !isLoading}
-            <img class="play-svg" src={PlaySvg} alt="play" on:click={handlePlaySong} on:keydown={handleKeyPress}>
+            <img class="play-svg" src={PlaySvg} alt="play" on:click={handlePlaySong} on:keydown={handlePlaySong}>
         {:else}
-            <img class="play-svg" src={loader} alt="loader" />
+            <img class="play-svg" src={loaderSvg} alt="loader" />
         {/if}
     {/if}
 </div>
@@ -155,14 +130,21 @@
         flex-grow: 1;
     }
     .track-img {
-        max-height: 12vh;
-        max-width: auto;
+        max-height: 13vh;
+        width: 13vw;
         margin: 2vh;
     }
     .track-info {
-        margin: 2vh;
         font-size: 1.5vh;
     }
+    .track-title {
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
     .channel-title {
         color: gray;
     }

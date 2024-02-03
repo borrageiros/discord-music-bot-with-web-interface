@@ -112,21 +112,9 @@
     appStatus.isPlaying = false;
   }
 
-  function handlePauseKeyPress(event) {
-    if (event.key === 'Enter') {
-      handlePause();
-    }
-  }
-
   async function handleResume() {
     await resume();
     appStatus.isPlaying = true;
-  }
-
-  function handleResumeKeyPress(event) {
-    if (event.key === 'Enter') {
-      handleResume();
-    }
   }
 
   async function handleSkip() {
@@ -136,32 +124,14 @@
     setTimeout( () => isSkipping = false, 2000);
   }
 
-  function handleSkipKeyPress(event) {
-    if (event.key === 'Enter') {
-      handleSkip();
-    }
-  }
-
   async function handleShuffle() {
     await toggleShuffle();
     setTimeout(getAppStatus, 2000);
   }
 
-  function handleShuffleKeyPress(event) {
-    if (event.key === 'Enter') {
-      handleShuffle();
-    }
-  }
-
   async function handleRepeat() {
     await toggleRepeat();
     setTimeout(getAppStatus, 2000);
-  }
-
-  function handleRepeatKeyPress(event) {
-    if (event.key === 'Enter') {
-      handleRepeat();
-    }
   }
 </script>
 
@@ -185,29 +155,29 @@
 
     <div class="controls">
       {#if appStatus.shuffle}
-        <img class="shuffle-on-svg" src={shuffleOnSvg} alt="shuffle-on" on:click={handleShuffle} on:keydown={handleShuffleKeyPress} >
+        <img class="shuffle-on-svg" src={shuffleOnSvg} alt="shuffle-on" on:click={handleShuffle} on:keydown={handleShuffle} >
       {:else}
-        <img class="shuffle-svg" src={shuffleSvg} alt="shuffle" on:click={handleShuffle} on:keydown={handleShuffleKeyPress} >
+        <img class="shuffle-svg" src={shuffleSvg} alt="shuffle" on:click={handleShuffle} on:keydown={handleShuffle} >
       {/if}
       
       <img class="backward-step-svg" src={backwardStepSvg} alt="backward-step">
 
       {#if appStatus.isPlaying}
-        <img class="pause-svg" src={pauseSvg} alt="pause" on:click={handlePause} on:keydown={handlePauseKeyPress}>
+        <img class="pause-svg" src={pauseSvg} alt="pause" on:click={handlePause} on:keydown={handlePause}>
       {:else}
-        <img class="play-svg" src={playSvg} alt="play" on:click={handleResume} on:keydown={handleResumeKeyPress}>
+        <img class="play-svg" src={playSvg} alt="play" on:click={handleResume} on:keydown={handleResume}>
       {/if}
 
       {#if !isSkipping}
-        <img class="forward-step-svg" src={forwardStepSvg} alt="forward-step" on:click={handleSkip} on:keydown={handleSkipKeyPress}>
+        <img class="forward-step-svg" src={forwardStepSvg} alt="forward-step" on:click={handleSkip} on:keydown={handleSkip}>
       {:else}
         <img class="play-svg" src={loader} alt="loader" />
       {/if}
       
       {#if appStatus.repeat === 1}
-        <img class="repeat-on-svg" src={repeatOnSvg} alt="repeat-on" on:click={handleRepeat} on:keydown={handleRepeatKeyPress} >
+        <img class="repeat-on-svg" src={repeatOnSvg} alt="repeat-on" on:click={handleRepeat} on:keydown={handleRepeat} >
       {:else}
-        <img class="repeat-svg" src={repeatSvg} alt="repeat" on:click={handleRepeat} on:keydown={handleRepeatKeyPress} >
+        <img class="repeat-svg" src={repeatSvg} alt="repeat" on:click={handleRepeat} on:keydown={handleRepeat} >
       {/if}
 
     </div>

@@ -49,12 +49,6 @@
             randomSearch();
         }
     }
-
-    function handleKeyDownSelectEngine(event, imageName) {
-        if (event.key === 'Enter') {
-            selectImage(imageName);
-        }
-    }
 </script>
 
 <div class="searcher-container">
@@ -64,7 +58,7 @@
             src={YoutubeSvg} 
             alt="youtube" 
             on:click={() => selectImage('youtube')} 
-            on:keydown={(event) => handleKeyDownSelectEngine(event, 'youtube')}
+            on:keydown={() => selectImage('youtube')} 
         >
 
         <img 
@@ -72,7 +66,7 @@
             src={SpotifySvg} 
             alt="spotifySearch" 
             on:click={() => selectImage('spotifySearch')} 
-            on:keydown={(event) => handleKeyDownSelectEngine(event, 'spotifySearch')}
+            on:keydown={() => selectImage('spotifySearch')} 
         >
 
         <img 
@@ -80,7 +74,7 @@
             src={SoundCloudSvg} 
             alt="soundcloudSearch" 
             on:click={() => selectImage('soundcloudSearch')} 
-            on:keydown={(event) => handleKeyDownSelectEngine(event, 'soundcloudSearch')}
+            on:keydown={() => selectImage('soundcloudSearch')}
         >
 
         <img 
@@ -88,7 +82,7 @@
             src={AppleMusicSvg} 
             alt="appleMusicSearch" 
             on:click={() => selectImage('appleMusicSearch')} 
-            on:keydown={(event) => handleKeyDownSelectEngine(event, 'appleMusicSearch')}
+            on:keydown={() => selectImage('appleMusicSearch')} 
         >
 
         <input 
