@@ -7,6 +7,7 @@
   import { onMount } from 'svelte';
   import { getAppStatus } from './api';
   import config from "../config"
+  import Notifications from './lib/Notification.svelte';
 
   let appStatus = {
       tracks: [],
@@ -42,26 +43,35 @@
   let socket;
 </script>
 
-
 <main>
   <div class="windows" style={ appStatus.tracks[0] ? "height: 82vh;" : "height: 98vh;"}>
+
+    <Notifications />
+
     <div class="left-side">
       <Searcher />
     </div>
+
     <div class="right-side">
+
       <div class="queue">
         <Queue appStatus={appStatus} />
       </div>
+
       <div class="channel-chooser">
         <ChannelChooser appStatus={appStatus} />
       </div>
+
     </div>
+
   </div>
+
   <div class="player">
     {#if appStatus.tracks[0]}
       <Player appStatus={appStatus} />
     {/if}
   </div>
+  
 </main>
 
 <style>
