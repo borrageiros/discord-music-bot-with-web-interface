@@ -3,7 +3,9 @@
     import { onMount } from 'svelte';
     import PlaySvg from '/icons/play.svg'
     import { playSong } from '../api';
+    import MenuButton from './ToggleMenuButton.svelte';
 
+    export let phoneQueueVisible = false;
     export let appStatus;
     let trackParam;
     let channelParam;
@@ -45,6 +47,7 @@
             on:keydown={handleKeyDown}
             placeholder="Add link to queue..."
         >
+        <MenuButton bind:phoneQueueVisible={phoneQueueVisible} />
     </div>
     <div class="queue-results">
         {#if appStatus && appStatus.tracks[0] && appStatus.tracks[0].id}
@@ -78,6 +81,7 @@
         border-bottom: solid 2px #242424;
         display: flex;
         align-items: center;
+        justify-content: space-around;
     }
     .sticky-searcher {
         position: sticky;
@@ -97,5 +101,10 @@
         margin-right: 1vh;
         height: 3vh;
         padding: 2vh;
+    }
+    @media (max-width: 1024px) {    
+        .queue-input{
+            width: 55%;
+        }
     }
 </style>

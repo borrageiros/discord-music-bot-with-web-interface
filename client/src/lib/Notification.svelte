@@ -18,9 +18,9 @@
 {#if visible}
 <div class="notification {type}" in:fly={{ y: -200, duration: 500 }} out:fly={{ y: -200, duration: 500 }}>
     {#if type === "success"}
-        <img src={checkSvg} alt="check-svg" />
+        <img class="check-svg" src={checkSvg} alt="check-svg" />
     {:else if type === "error"}
-        <img src={alertSvg} alt="alert-svg" />
+        <img class="alert-svg" src={alertSvg} alt="alert-svg" />
     {/if}
     <p class="message">{message}</p>
     <img src={closeSvg} alt="close-x-svg" class="close-x-svg" on:click={clearNotification} on:keydown={clearNotification}/>
@@ -49,7 +49,7 @@
         flex-grow: 1;
         text-align: center;
     }
-    img{
+    .check-svg, .alert-svg, .close-x-svg {
         width: 3vh;
         cursor: pointer;
         margin-left: 10px;
@@ -66,5 +66,17 @@
         background-color: rgb(255, 86, 86);
         border: red 5px solid;
         color: black;
+    }
+
+    @media (max-width: 1024px) {        
+        .notification {
+            height: 10vh;
+            width: 70%;
+        }
+        .message {
+            font-size: 5vw;
+            flex-grow: 1;
+            text-align: center;
+        }
     }
 </style>

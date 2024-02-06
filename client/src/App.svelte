@@ -9,6 +9,8 @@
   import config from "../config"
   import Notifications from './lib/Notification.svelte';
 
+  let phoneQueueVisible = false; // In phone web version, define if the visible component is <Searcher> or <Queue>
+
   let appStatus = {
       tracks: [],
       volume: null,
@@ -49,14 +51,24 @@
     <Notifications />
 
     <div class="left-side">
-      <Searcher />
+      {#if !phoneQueueVisible}
+        <Searcher bind:phoneQueueVisible={phoneQueueVisible} />
+      {:else if phoneQueueVisible}
+        <div class="queue">
+          <Queue appStatus={appStatus} bind:phoneQueueVisible={phoneQueueVisible} />
+        </div>
+        <div class="channel-chooser">
+          <ChannelChooser appStatus={appStatus} />
+        </div>
+      {/if}
     </div>
 
     <div class="right-side">
-
-      <div class="queue">
-        <Queue appStatus={appStatus} />
-      </div>
+      {#if !phoneQueueVisible}
+        <div class="queue">
+          <Queue appStatus={appStatus} />
+        </div>
+      {/if}
 
       <div class="channel-chooser">
         <ChannelChooser appStatus={appStatus} />
@@ -97,5 +109,13 @@
   }
   .channel-chooser{
     height: 19%;
+  }
+  @media (max-width: 1024px) {
+    .left-side {
+      width: 100%;
+    }
+    .right-side {
+      display: none;
+    }
   }
 </style>

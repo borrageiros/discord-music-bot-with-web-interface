@@ -1,4 +1,8 @@
 <script>
+  import { showNotification } from './NotificationStore';
+  import { onDestroy } from 'svelte';
+  import { setVolume, pause, resume, skip, getAppStatus, toggleShuffle, toggleRepeat, seek } from '../api';
+
   export let appStatus;
 
   // ASSETS SVG
@@ -12,17 +16,15 @@
   import shuffleOnSvg from '/icons/shuffle-on.svg';
   import volumeOn from '/icons/volume-on.svg';
   import volumeOff from '/icons/volume-off.svg';
-  import loader from '/icons/loader.svg';
+  import Loader from './LoaderSvg.svelte';
   // ASSETS SVG
 
-  import { onDestroy } from 'svelte';
-  import { setVolume, pause, resume, skip, getAppStatus, toggleShuffle, toggleRepeat, seek } from '../api';
-  
   let volume = appStatus.volume;
   let userIsInteracting = false;
   let currentDurationInSeconds = 0;
   let interval;
   let isSkipping = false;
+  let isLive = appStatus.currentTrack && appStatus.currentTrack.duration === "0:00" && !appStatus.currentTrack.url.includes("apple");
   
   $: if (appStatus.volume !== volume && !userIsInteracting) {
     volume = appStatus.volume;
@@ -117,6 +119,10 @@
     appStatus.isPlaying = true;
   }
 
+  async function handleBackward() {
+    showNotification("Not implemented", "error");
+  }
+
   async function handleSkip() {
     isSkipping = true;
     await skip();
@@ -143,7 +149,7 @@
     <div class="track-title">
       <p>{ appStatus.currentTrack ? appStatus.currentTrack.title : "" }</p>
       <p>{ appStatus.currentTrack ? appStatus.currentTrack.author : "" }</p>
-      {#if appStatus.currentTrack && appStatus.currentTrack.duration === "0:00" && !appStatus.currentTrack.url.includes("apple")}
+      {#if isLive}
         <div class="on-live">
           <p>🔴 On Live</p>
         </div>
@@ -160,7 +166,7 @@
         <img class="shuffle-svg" src={shuffleSvg} alt="shuffle" on:click={handleShuffle} on:keydown={handleShuffle} >
       {/if}
       
-      <img class="backward-step-svg" src={backwardStepSvg} alt="backward-step">
+      <img class="backward-step-svg" src={backwardStepSvg} alt="backward-step" on:click={handleBackward} on:keydown={handleBackward}>
 
       {#if appStatus.isPlaying}
         <img class="pause-svg" src={pauseSvg} alt="pause" on:click={handlePause} on:keydown={handlePause}>
@@ -171,9 +177,11 @@
       {#if !isSkipping}
         <img class="forward-step-svg" src={forwardStepSvg} alt="forward-step" on:click={handleSkip} on:keydown={handleSkip}>
       {:else}
-        <img class="play-svg" src={loader} alt="loader" />
+        <div class="forward-step-svg">
+          <Loader />
+        </div>
       {/if}
-      
+
       {#if appStatus.repeat === 1}
         <img class="repeat-on-svg" src={repeatOnSvg} alt="repeat-on" on:click={handleRepeat} on:keydown={handleRepeat} >
       {:else}
@@ -181,6 +189,12 @@
       {/if}
 
     </div>
+
+    {#if isLive && window.innerWidth <= 1024}
+      <div class="track-info-phone-version">
+        <p>🔴 On Live</p>
+      </div>
+    {/if}
 
     <div class="song-state-container">
       {#if appStatus.currentTrack && appStatus.currentTrack.duration !== "0:00"}
@@ -250,8 +264,8 @@
 
   .track-info .track-image {
     max-height: 70%;
-    height: 20vh;
-    margin: 10px;
+    max-width: 20vw;
+    margin: 1vw;
   }
 
   .track-title {
@@ -351,4 +365,27 @@
     width: 1.5vh;
   }
 
+  @media (max-width: 1024px) {
+    .player {
+      width: 96.5%;
+    }
+    .controls-container{
+      width: 100%;
+    }
+    .volume, .track-info {
+      display: none;
+    }
+    .track-info-phone-version {
+      width: 20%;
+      margin-bottom: 2vh;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center; 
+      font-size: 3.8vw;
+    }
+    .controls {
+      justify-content: space-between;
+    }
+  }
 </style>
