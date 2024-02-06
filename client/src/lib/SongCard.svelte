@@ -8,7 +8,7 @@
     import ArrowUp from '/icons/arrow-up.svg';
     import TrashCanSvg from '/icons/trash-can.svg';
     import PlaySvg from '/icons/play.svg';
-    import loaderSvg from '/icons/loader.svg';
+    import Loader from './LoaderSvg.svelte';
     let isLoading;
 
     import { playSong, deleteTrack, getCurrentTrack, skip, getAppStatus } from '../api';
@@ -35,7 +35,9 @@
         if (channel) {
             await playSong( url, channel );
             dispatch('remove');
-            // showNotification("Song added", "success");
+            if (window.innerWidth <= 1024) { // Show notification for phones or tablets
+                showNotification("Song added", "success");
+            }
         }else {
             showNotification("You must select a channel first", "error", 3);
             isLoading = false;
@@ -102,13 +104,17 @@
                 <img class="trash-can-svg" src={TrashCanSvg} alt="delete" on:click={handleDeleteTrack} on:keydown={handleDeleteTrack}>
             {/if}
         {:else}
-            <img class="play-svg" src={loaderSvg} alt="loader" />
+            <div class="loader">
+                <Loader />
+            </div>
         {/if}
     {:else}
         {#if !isLoading}
             <img class="play-svg" src={PlaySvg} alt="play" on:click={handlePlaySong} on:keydown={handlePlaySong}>
         {:else}
-            <img class="play-svg" src={loaderSvg} alt="loader" />
+            <div class="loader">
+                <Loader />
+            </div>
         {/if}
     {/if}
 </div>
@@ -131,7 +137,7 @@
     }
     .track-img {
         max-height: 13vh;
-        width: 13vw;
+        max-width: 30%;
         margin: 2vh;
     }
     .track-info {
@@ -167,6 +173,12 @@
     }
     .play-svg, .trash-can-svg {
         height: 5vh;
+        margin: 2vh;
+        cursor: pointer;
+    }
+    .loader{
+        min-width: 5vh;
+        max-width: 5vh;
         margin: 2vh;
         cursor: pointer;
     }

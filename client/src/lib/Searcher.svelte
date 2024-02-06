@@ -6,7 +6,10 @@
     import SpotifySvg from '/icons/spotify.svg';
     import SoundCloudSvg from '/icons/soundcloud.svg';
     import AppleMusicSvg from '/icons/applemusic.svg';
-    import LoaderSvg from '/icons/loader.svg'
+    import MenuButton from './ToggleMenuButton.svelte';
+    import Loader from './LoaderSvg.svelte';
+
+    export let phoneQueueVisible;
 
     let searchQuery = '';
     let results = [];
@@ -85,6 +88,8 @@
             on:keydown={() => selectImage('appleMusicSearch')} 
         >
 
+        <MenuButton bind:phoneQueueVisible={phoneQueueVisible} />
+
         <input 
             class="searcher-input" 
             type="text" 
@@ -101,7 +106,9 @@
     </div>
     <div class="searcher-results" class:loading={results.length === 0}>
         {#if results.length === 0}
-            <img src={LoaderSvg} alt="Loading..." class="loader" />
+            <div class="loader">
+                <Loader />
+            </div>
         {:else}
             {#key results}
                 {#each results as track, index}
@@ -144,7 +151,10 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 90vh;
+        height: 80%;
+    }
+    .loader {
+        height: 10%;
     }
     .searcher{
         min-height: 9vh;
@@ -170,9 +180,16 @@
         height: 3vh;
         padding: 2vh;
     }
-    .loader {
-        display: block;
-        margin: auto;
-        height: 10vh;
+    @media (max-width: 1024px) {        
+        .searcher {
+            min-height: 9vh;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .searcher-input {
+            width: 90%;
+            margin-bottom: 1vh;
+        }
     }
 </style>
