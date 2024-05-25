@@ -6,7 +6,6 @@
   import ChannelChooser from './lib/ChannelChooser.svelte';
   import { onMount } from 'svelte';
   import { getAppStatus } from './api';
-  import config from "../config"
   import Notifications from './lib/Notification.svelte';
 
   let phoneQueueVisible = false; // In phone web version, define if the visible component is <Searcher> or <Queue>
@@ -26,8 +25,9 @@
       } catch (error) {
           console.error('Error fetching app status:', error);
       }
-
-      socket = io(config.apiUrl);
+      
+      const currentUrl = window.location.href;
+      socket = io(currentUrl.split('?')[0]);
 
       socket.on('connect', (data) => {
           console.log('WebSocket connected');

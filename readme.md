@@ -43,34 +43,14 @@ yarn installation
 ```
 
 - Configuration
-    - Set variables in "config.js" and "client/config.js"
-    - "config.js":
+    - Environment variables
+    - Copy the ".env.example" file to ".env" and fill in the values
     ```
-    module.exports = {
-        app: {
-            token: "",                          // Bot Secret Token
-            author: 'borrageiros',              // Author
-            guild: '',                          // Discord Server Id 
-            activityType: "Listening",          // Activity of the bot: "Streaming", "Listening", "Watching", "Playing"
-            activity: "music",                  // Text after the activityType, this example: Listening to music
-            invite: "",                         // OPTIONAL - invite url
-            frontUrl: "http://localhost:5173",  // Front app url (web)
-            discordPlayer: {
-                ytdlOptions: {
-                    quality: 'highestaudio',
-                    highWaterMark: 1 << 25
-                }
-            }
-        },
-    };
-
-    ```
-    - "client/config.js"
-    ```
-    const config = {
-        apiUrl: "http://localhost:5678"     // API URL
-    };
-    export default config;
+    TOKEN=                          // Bot Secret Token
+    ACTIVITY_TYPE=Listening         // Activity of the bot: "Streaming", "Listening", "Watching", "Playing"
+    ACTIVITY=music                  // Text after the activityType, this example output: Listening to music
+    DOMAIN=http://localhost:5178    // The domain where you will be running the application, default "localhost", and default port 5178
+    PORT=5178                       // The port where you will be running the application, default 5178
     ```
 - Start
     > This will launch the server and the client
