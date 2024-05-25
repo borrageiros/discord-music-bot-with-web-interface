@@ -1,3 +1,4 @@
+const express = require('express');
 const router = require('express').Router();
 const play = require('./commands/play.route');
 const pause = require('./commands/pause.route');
@@ -16,45 +17,47 @@ const deleteTrack = require('./commands/delete-track.route');
 const getCurrentTrack = require('./commands/get-current-track.route');
 const moveTrack = require('./commands/move-track.route');
 
-router.get('/', (req, res) => {
+router.use("/", express.static('interface', { 'Content-Type': 'application/javascript' }));
+
+router.get('/docs', (req, res) => {
   res.status(200).json({
     message: 'Api',
     endpoints: {
-      play: '/play',
-      pause: '/pause',
-      resume: '/resume',
-      connect: '/connect',
-      skip: '/skip',
-      seek: '/seek',
-      toggleShuffle: '/toggle-shuffle',
-      toggleRepeat: '/toggle-repeat',
-      getAppStatus: '/get-app-status',
-      getQueue: '/get-queue',
-      setVolume: '/set-volume',
-      getChannels: '/get-channels',
-      searcher: '/searcher',
-      deleteTrack: '/delete-track',
-      getCurrentTrack: '/get-current-track'
+      play: '/api/play',
+      pause: '/api/pause',
+      resume: '/api/resume',
+      connect: '/api/connect',
+      skip: '/api/skip',
+      seek: '/api/seek',
+      toggleShuffle: '/api/toggle-shuffle',
+      toggleRepeat: '/api/toggle-repeat',
+      getAppStatus: '/api/get-app-status',
+      getQueue: '/api/get-queue',
+      setVolume: '/api/set-volume',
+      getChannels: '/api/get-channels/:guildId',
+      searcher: '/api/searcher',
+      deleteTrack: '/api/delete-track',
+      getCurrentTrack: '/api/get-current-track'
     }
   });
 });
 
 // command-routes registration
-router.use('/play', play);
-router.use('/pause', pause);
-router.use('/resume', resume);
-router.use('/connect', connect);
-router.use('/skip', skip);
-router.use('/seek', seek);
-router.use('/toggle-shuffle', toggleShuffle);
-router.use('/toggle-repeat', toggleRepeat);
-router.use('/get-app-status', getAppStatus);
-router.use('/get-channels', getChannels);
-router.use('/set-volume', setVolume);
-router.use('/get-queue', getQueue);
-router.use('/searcher', searcher);
-router.use('/delete-track', deleteTrack);
-router.use('/get-current-track', getCurrentTrack);
-router.use('/move-track', moveTrack);
+router.use('/api/play', play);
+router.use('/api/pause', pause);
+router.use('/api/resume', resume);
+router.use('/api/connect', connect);
+router.use('/api/skip', skip);
+router.use('/api/seek', seek);
+router.use('/api/toggle-shuffle', toggleShuffle);
+router.use('/api/toggle-repeat', toggleRepeat);
+router.use('/api/get-app-status', getAppStatus);
+router.use('/api/get-channels', getChannels);
+router.use('/api/set-volume', setVolume);
+router.use('/api/get-queue', getQueue);
+router.use('/api/searcher', searcher);
+router.use('/api/delete-track', deleteTrack);
+router.use('/api/get-current-track', getCurrentTrack);
+router.use('/api/move-track', moveTrack);
 
 module.exports = router;

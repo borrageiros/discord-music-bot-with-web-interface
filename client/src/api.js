@@ -1,5 +1,5 @@
-import config from "../config"
-const url = config.apiUrl;
+const currentUrl = window.location.href;
+const url = currentUrl.split('?')[0] + "api";
 
 // --------------------------------------------------------------
 export async function playSong(trackUrl, voiceChannel) {
@@ -206,9 +206,9 @@ export async function toggleRepeat() {
 
 
 // --------------------------------------------------------------
-export async function getChannels() {
+export async function getChannels(guild) {
     try {
-        const response = await fetch(url+"/get-channels", {
+        const response = await fetch(url+"/get-channels/" + guild, {
             method: 'GET'
         });
         

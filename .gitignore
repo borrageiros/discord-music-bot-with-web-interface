@@ -1,4 +1,6 @@
+.env
 node_modules
+interface
 client/node_modules
 yarn-error.log
 client/yarn-error.log

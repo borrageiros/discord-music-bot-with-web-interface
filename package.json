@@ -5,11 +5,12 @@
   "author": "borrageiros",
   "license": "MIT",
   "scripts": {
-    "installation": "yarn && cd client && yarn",
-    "start": "concurrently \"npm run serve:server\" \"npm run serve:client\"",
-    "serve:server": "nodemon src/index.js",
-    "serve:client": "cd client && npm run dev",
-    "dev": "concurrently \"npm run serve:server\" \"npm run serve:client\""
+    "installation": "npm install && cd client && npm install && npm run build",
+    "prestart": "test -d interface || npm run build:client",
+    "start": "node src/index.js",
+    "build:client": "cd client && npm run build",
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "nodemon src/index.js"
   },
   "dependencies": {
     "@discord-player/extractor": "^4.4.6",
@@ -21,6 +22,7 @@
     "cors": "^2.8.5",
     "discord-player": "^6.6.7",
     "discord.js": "^14.14.1",
+    "dotenv": "^16.4.5",
     "express": "^4.18.2",
     "mediaplex": "^0.0.9",
     "opusscript": "^0.1.1",

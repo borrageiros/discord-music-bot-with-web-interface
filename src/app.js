@@ -10,6 +10,7 @@ const { Server } = require('socket.io');
 const EventEmitter = require('events');
 class ClientEmitter extends EventEmitter {}
 const clientEmitter = new ClientEmitter();
+require('dotenv').config();
 
 // DISCORD
 global.client = new Client({
@@ -22,8 +23,12 @@ global.client = new Client({
     ],
     disableMentions: 'everyone',	
 });
-client.config = require('../config');
-const player = new Player(client, client.config.app.discordPlayer);
+const player = new Player(client, {
+    ytdlOptions: {
+        quality: 'highestaudio',
+        highWaterMark: 1 << 25
+    }
+});
 client.player = player;
 const queue = new GuildQueue(player, {})
 client.queue = queue;
@@ -32,10 +37,11 @@ player.extractors.loadDefault();
 client.on("ready", () => {
     console.log(`Logged to discord with name: ${client.user.username}`);
 	client.user.setPresence({
-		activities: [{ name: `${client.config.app.activity}`, type: ActivityType[client.config.app.activityType] }],
+		activities: [{ name: `${process.env.ACTIVITY}`, type: ActivityType[process.env.ACTIVITY_TYPE] }],
 		status: 1,
 	});
-    const command = new SlashCommandBuilder()
+
+    const commandPlay = new SlashCommandBuilder()
         .setName('play')
         .setDescription('Open the web reproducer and play a song')
         .addStringOption(option => 
@@ -43,16 +49,27 @@ client.on("ready", () => {
                 .setDescription('URL or track name to play')
                 .setRequired(true)
     );
+
+    const commandSendLink = new SlashCommandBuilder()
+        .setName('link')
+        .setDescription('Send to the channel a link to open the web reproducer');
+
     const commands = [
-        command.toJSON()
+        commandPlay.toJSON(),
+        commandSendLink.toJSON()
     ];
-    const rest = new REST({ version: '9' }).setToken(client.config.app.token);
+
+    const rest = new REST({ version: '9' }).setToken(process.env.TOKEN);
     (async () => {
+        const guilds = client.guilds.cache.map(guild => guild.id);
         try {
-            await rest.put(
-                Routes.applicationGuildCommands(client.user.id, client.config.app.guild),
-                { body: commands },
-            );
+            for (const guildId of guilds) {
+                await rest.put(
+                    Routes.applicationGuildCommands(client.user.id, guildId),
+                    { body: commands },
+                );
+                console.log(`Registered commands for guild ${guildId}`);
+            }
         } catch (error) {
             console.error(error);
         }
@@ -61,19 +78,34 @@ client.on("ready", () => {
 
 client.on("interactionCreate", async interaction => {
     if (!interaction.isCommand()) return;
-    const { commandName } = interaction;
+    const { commandName, guildId } = interaction;
     
     if (commandName  === 'play') {
         try {
             const query = interaction.options.getString('song');
             const results = await client.player.search(query, { searchEngine: "youtube" });
-            const exampleEmbed = new EmbedBuilder()
+            const embed = new EmbedBuilder()
             .setColor(0xe838cd)
-            .setTitle(`Click here to reproduce this song on ${client.user.username}`)
-            .setURL( client.config.app.frontUrl + "/?channel=" + interaction.member.voice.channelId + "&track=https://www.youtube.com/watch?v=" + results.tracks[0].id )
+            .setTitle(`Click here to reproduce this song on "${client.user.username}"`)
+            .setURL( process.env.DOMAIN + "/?guild=" + guildId + "&channel=" + interaction.member.voice.channelId + "&track=https://www.youtube.com/watch?v=" + results.tracks[0].id )
             .setDescription(results.tracks[0].title)
             .setImage(results.tracks[0].thumbnail)
-            await interaction.reply({ embeds: [exampleEmbed] });
+            await interaction.reply({ embeds: [embed] });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    if (commandName  === 'link') {
+        try {
+            const embed = new EmbedBuilder()
+            .setColor(0xe838cd)
+            .setTitle(`Click here to open "${client.user.username}" interface`)
+            .setURL( process.env.DOMAIN + "/?guild=" + guildId )
+            .setImage("https://raw.githubusercontent.com/borrageiros/discord-music-bot-with-web-interface/main/readme/screenshot.jpg")
+            interaction.deferReply();
+            interaction.deleteReply();
+            await interaction.channel.send({ embeds: [embed] });
         } catch (error) {
             console.error(error);
         }
@@ -84,7 +116,7 @@ client.on("disconnect", () => {
     clientEmitter.emit('clientChanged', client);
 })
 
-client.login(client.config.app.token);
+client.login(process.env.TOKEN);
 module.exports = { client, clientEmitter };
 // DISCORD
 

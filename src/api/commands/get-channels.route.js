@@ -3,8 +3,8 @@ const { client, clientEmitter } = require('../../app');
 
 console.log("+ Get-channels command-route loaded");
 
-router.get('/', async (req, res) => {
-    const guildId = client.config.app.guild;
+router.get('/:guildId', async (req, res) => {
+    const guildId = req.params.guildId;
     
     if (!guildId) {
         return res.status(400).json({ error: 'No guild ID provided' });
