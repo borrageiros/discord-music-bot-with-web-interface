@@ -25,16 +25,22 @@ It is built upon:
     - Add the intents
         - PRESENCE INTENT
         - SERVER MEMBERS INTENT
-        - MESSAGE CONTENT INTENT
-    ![bot-intents](./readme/bot_intents.jpg)
-    - Generate an invite URL with proper permissions
-        - bot
+        - MESSAGE CONTENT INTENT  
+
+
+![bot-intents](./readme/bot_intents.jpg)  
+
+
+   - Generate an invite URL with proper permissions
+       - bot
             - Send Messages
             - Send Messages in Threads
             - Use Slash Commands
             - Connect
-            - Speak
-    ![bot-permissions](./readme/bot_permissions.png)
+            - Speak  
+
+
+![bot-permissions](./readme/bot_permissions.png)
 
 - Install requirements
     > This will run the command "yarn" (installation) in the server and client folders
