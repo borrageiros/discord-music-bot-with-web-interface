@@ -13,7 +13,6 @@ router.get('/', async (req, res) => {
         // 3 > Autoplay
         if (client.queue.repeatMode == QueueRepeatMode.OFF){
             client.queue.setRepeatMode(QueueRepeatMode.TRACK)
-
         }else{
             client.queue.setRepeatMode(QueueRepeatMode.OFF)
         }

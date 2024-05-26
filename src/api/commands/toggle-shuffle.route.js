@@ -5,7 +5,7 @@ console.log("+ Toggle-shuffle command-route loaded");
 
 router.get('/', async (req, res) => {
     try{
-        client.queue.toggleShuffle()
+        client.queue.toggleShuffle();
         clientEmitter.emit('clientChanged', client);
         res.status(200).json({ message: "Toggled" });
     } catch (error) {
