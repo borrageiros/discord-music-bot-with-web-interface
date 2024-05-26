@@ -71,3 +71,16 @@ yarn start
 - Interface / API / WebSockets: 5678
 
 - The server displays the web interface build located in the 'interface' folder. To run the application, you must first build the interface. Both the "npm install" and "npm start" commands check this folder before running the application and automatically execute the interface build to prevent errors.
+
+- Avaliable commands:
+
+```
+{
+    "installation": "npm install && cd client && npm install && npm run build",
+    "prestart": "test -d interface || npm run build:client",
+    "start": "node src/index.js",
+    "build:client": "cd client && npm run build",
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "nodemon src/index.js"
+}
+```
