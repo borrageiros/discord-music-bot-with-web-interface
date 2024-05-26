@@ -28,9 +28,11 @@ It is built upon:
         - MESSAGE CONTENT INTENT  
 
 
-![bot-intents](./readme/bot_intents.jpg)
-    - Generate an invite URL with proper permissions
-        - bot
+![bot-intents](./readme/bot_intents.jpg)  
+
+
+   - Generate an invite URL with proper permissions
+       - bot
             - Send Messages
             - Send Messages in Threads
             - Use Slash Commands
