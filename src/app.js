@@ -1,8 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const { Player, GuildQueue } = require('discord-player');
-const { Client, GatewayIntentBits, ActivityType, EmbedBuilder } = require('discord.js');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { Client, GatewayIntentBits, ActivityType, Collection } = require('discord.js');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const http = require('http');
@@ -10,6 +9,8 @@ const { Server } = require('socket.io');
 const EventEmitter = require('events');
 class ClientEmitter extends EventEmitter {}
 const clientEmitter = new ClientEmitter();
+const fs = require('fs');
+const path = require('path');
 require('dotenv').config();
 
 // DISCORD
@@ -34,41 +35,44 @@ const queue = new GuildQueue(player, {})
 client.queue = queue;
 player.extractors.loadDefault();
 
+// COMMANDS
+client.commands = new Collection();
+const commandsPath = path.join(__dirname, 'discord', 'commands');
+const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+for (const file of commandFiles) {
+    const filePath = path.join(commandsPath, file);
+    const command = require(filePath);
+    client.commands.set(command.data.name, command);
+}
+
 client.on("ready", () => {
-    console.log(`Logged to discord with name: ${client.user.username}`);
+    console.log(`🟢 Logged to discord with name: ${client.user.username}`);
 	client.user.setPresence({
 		activities: [{ name: `${process.env.ACTIVITY}`, type: ActivityType[process.env.ACTIVITY_TYPE] }],
 		status: 1,
 	});
 
-    const commandPlay = new SlashCommandBuilder()
-        .setName('play')
-        .setDescription('Open the web reproducer and play a song')
-        .addStringOption(option => 
-            option.setName('song')
-                .setDescription('URL or track name to play')
-                .setRequired(true)
-    );
-
-    const commandSendLink = new SlashCommandBuilder()
-        .setName('link')
-        .setDescription('Send to the channel a link to open the web reproducer');
-
-    const commands = [
-        commandPlay.toJSON(),
-        commandSendLink.toJSON()
-    ];
-
     const rest = new REST({ version: '9' }).setToken(process.env.TOKEN);
     (async () => {
-        const guilds = client.guilds.cache.map(guild => guild.id);
         try {
-            for (const guildId of guilds) {
+            const guilds = client.guilds.cache.map(guild => ({ id: guild.id, name: guild.name }));
+
+            // Delete previus commands saved on the server
+            for (const guild of guilds) {
+                const commands = await rest.get(Routes.applicationGuildCommands(client.user.id, guild.id));
+                for (const command of commands) {
+                    await rest.delete(Routes.applicationGuildCommand(client.user.id, guild.id, command.id));
+                }
+                console.log(`🆑 Deleted old commands for guild "${guild.name}"`);
+            }
+
+            // Add new commands in the server
+            for (const guild of guilds) {
                 await rest.put(
-                    Routes.applicationGuildCommands(client.user.id, guildId),
-                    { body: commands },
+                    Routes.applicationGuildCommands(client.user.id, guild.id),
+                    { body: client.commands.map(command => command.data.toJSON()) },
                 );
-                console.log(`Registered commands for guild ${guildId}`);
+                console.log(`🆕 Registered commands for guild "${guild.name}"`);
             }
         } catch (error) {
             console.error(error);
@@ -78,37 +82,17 @@ client.on("ready", () => {
 
 client.on("interactionCreate", async interaction => {
     if (!interaction.isCommand()) return;
-    const { commandName, guildId } = interaction;
-    
-    if (commandName  === 'play') {
-        try {
-            const query = interaction.options.getString('song');
-            const results = await client.player.search(query, { searchEngine: "youtube" });
-            const embed = new EmbedBuilder()
-            .setColor(0xe838cd)
-            .setTitle(`Click here to reproduce this song on "${client.user.username}"`)
-            .setURL( process.env.DOMAIN + "/?guild=" + guildId + "&channel=" + interaction.member.voice.channelId + "&track=https://www.youtube.com/watch?v=" + results.tracks[0].id )
-            .setDescription(results.tracks[0].title)
-            .setImage(results.tracks[0].thumbnail)
-            await interaction.reply({ embeds: [embed] });
-        } catch (error) {
-            console.error(error);
-        }
-    }
 
-    if (commandName  === 'link') {
-        try {
-            const embed = new EmbedBuilder()
-            .setColor(0xe838cd)
-            .setTitle(`Click here to open "${client.user.username}" interface`)
-            .setURL( process.env.DOMAIN + "/?guild=" + guildId )
-            .setImage("https://raw.githubusercontent.com/borrageiros/discord-music-bot-with-web-interface/main/readme/screenshot.jpg")
-            interaction.deferReply();
-            interaction.deleteReply();
-            await interaction.channel.send({ embeds: [embed] });
-        } catch (error) {
-            console.error(error);
-        }
+    const command = client.commands.get(interaction.commandName);
+
+    if (!command) return;
+
+    try {
+        await command.execute(interaction, client);
+        clientEmitter.emit('clientChanged', client);
+    } catch (error) {
+        console.error(error);
+        await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
     }
 });
 
@@ -135,8 +119,6 @@ const io = new Server(server, {
 });
 
 io.on('connection', (socket) => {
-    console.log('Cliente conectado');
-
     const sendUpdate = (updatedClient) => {
         const currentTrack = client.queue.currentTrack;
         const progressBar = client.queue.node.createProgressBar({separator: "", indicator: "", length: 1});
