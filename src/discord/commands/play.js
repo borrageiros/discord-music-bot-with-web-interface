@@ -25,7 +25,7 @@ module.exports = {
             try{
                 if (!client.queue.connection) await client.queue.connect(voiceChannel.id);
             } catch {
-                return interaction.reply('Something went wrong: I cant contect to the voice channel... try again');
+                return interaction.reply('Something went wrong: I cant connect to the voice channel... try again');
             }
 
             // Reproduce
@@ -41,7 +41,7 @@ module.exports = {
                 .setColor(0xe838cd)
                 .setTitle(`Click here to open "${botName}" interface`)
                 .setURL(process.env.DOMAIN + "/?guild=" + interaction.guildId + "&channel=" + interaction.member.voice.channelId + "&track=https://www.youtube.com/watch?v=" + results.tracks[0].id)
-                .setDescription(`**Song added!**\n${title}`)
+                .setDescription(`⏯ **Song added!**\n${title}`)
                 .setImage(image);
             await interaction.reply({ embeds: [embed] });
         } catch (error) {

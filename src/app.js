@@ -57,17 +57,16 @@ client.on("ready", () => {
         try {
             const guilds = client.guilds.cache.map(guild => ({ id: guild.id, name: guild.name }));
 
-            // Delete previus commands saved on the server
             for (const guild of guilds) {
                 const commands = await rest.get(Routes.applicationGuildCommands(client.user.id, guild.id));
+
+                // Delete previus commands saved on the server
                 for (const command of commands) {
                     await rest.delete(Routes.applicationGuildCommand(client.user.id, guild.id, command.id));
                 }
                 console.log(`🆑 Deleted old commands for guild "${guild.name}"`);
-            }
 
-            // Add new commands in the server
-            for (const guild of guilds) {
+                // Add new commands in the server
                 await rest.put(
                     Routes.applicationGuildCommands(client.user.id, guild.id),
                     { body: client.commands.map(command => command.data.toJSON()) },
