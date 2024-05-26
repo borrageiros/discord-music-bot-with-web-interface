@@ -66,6 +66,8 @@ yarn start
 ## ℹ | Info
 > **🔴Default ports of the application:**
 
-- Interface: 5173
+- Dev interface: 5173
 
-- API / WebSockets: 5678
+- Interface / API / WebSockets: 5678
+
+- The server displays the web interface build located in the 'interface' folder. To run the application, you must first build the interface. Both the "npm install" and "npm start" commands check this folder before running the application and automatically execute the interface build to prevent errors.
