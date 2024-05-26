@@ -26,6 +26,8 @@ It is built upon:
         - PRESENCE INTENT
         - SERVER MEMBERS INTENT
         - MESSAGE CONTENT INTENT  
+
+
 ![bot-intents](./readme/bot_intents.jpg)
     - Generate an invite URL with proper permissions
         - bot
@@ -34,6 +36,8 @@ It is built upon:
             - Use Slash Commands
             - Connect
             - Speak  
+
+
 ![bot-permissions](./readme/bot_permissions.png)
 
 - Install requirements
