@@ -137,4 +137,40 @@ docker run -d \
 ```
 SKIP_UPDATE_COMMANDS=true/false     // Skip the update the commands in the discord applicationGuildCommands (slash commands showed in discord interface)
 DELETE_PREVIUS_COMMANDS=true/false  // Delete the previous commands in the discord applicationGuildCommands (slash commands showed in discord interface) (Only works if SKIP_UPDATE_COMMANDS=true)
-```
+```  
+
+***
+
+
+## 👾 | Discord commands/integration
+> **Apart from the interface, there are some commands to control the bot directly from Discord:**  
+
+- **/link**  
+    Send to the channel a link to open the web reproducer
+
+- **/nowplaying**  
+    See which song is currently playing
+
+- **/pause**  
+    Pauses the current song
+
+- **/play**  
+    Play music by the given song name or song link
+
+- **/queue**  
+    Shows the current queue
+
+- **/repeat**  
+    Toggle the repeat loop mode
+
+- **/resume**  
+    Resumes the current song
+
+- **/shuffle**  
+    Toggle the shuffle mode on the current queue
+
+- **/skip**  
+    Skip the current playing song
+
+- **/volume**  
+    Change current playing volume
