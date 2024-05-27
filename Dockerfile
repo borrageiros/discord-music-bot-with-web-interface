@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y ffmpeg
 
 COPY . .
 
+RUN npm install -g yarn
 RUN yarn installation
 
 EXPOSE 5678
