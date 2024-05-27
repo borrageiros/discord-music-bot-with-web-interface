@@ -12,11 +12,21 @@ It is built upon:
 - Graphical Interface: Leveraging the robust combination of Vite and Svelte for a sleek and responsive user experience.
 - API/WebSockets: A powerful trio of Express, Socket.io, and discord.js orchestrates seamless real-time communication and interaction with Discord's API.
 
-![scheme](./readme/scheme.png)
+![scheme](./readme/scheme.png)  
+
+
+***  
+
+
 ## 🚧 | Prerequisites
 - [Node.js >= 20](https://nodejs.org/en/download/)
 - [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#windows-stable)
-- [FFmpeg](https://ffmpeg.org/download.html)
+- [FFmpeg](https://ffmpeg.org/download.html)  
+
+
+***  
+
+
 ## 📝 | Installation
 
 - First of all you need to create a discord application in the [Discord Developer Portal](https://discord.com/developers/applications)
@@ -63,6 +73,11 @@ yarn installation
 ```
 yarn start
 ```  
+
+
+***  
+
+
 ## 🐳 | Docker
 > **You can find 2 previous builds on Docker Hub:**  
 
@@ -90,6 +105,11 @@ docker run -d \
     -e ACTIVITY="music" \
     borrageiros/discord-music-bot:latest
 ```  
+
+
+***  
+
+
 ## ℹ | Info
 > **🔴Default ports of the application:**
 
