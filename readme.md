@@ -62,7 +62,34 @@ yarn installation
     > This will launch the server and the client
 ```
 yarn start
+```  
+## 🐳 | Docker
+> **You can find 2 previous builds on Docker Hub:**  
+
+[Link to DockerHub repository](https://hub.docker.com/repository/docker/borrageiros/discord-music-bot/tags)
+
+- **latest**: for amd64 distributions  
+    ```
+    borrageiros/discord-music-bot:latest
+    ```
+
+- **arm64**: for arm64 distributions  
+    ```
+    borrageiros/discord-music-bot:arm64
+    ```  
+
+Example command:
+
 ```
+docker run -d \
+    --name=discord-music-bot \
+    -p 3000:5178 \
+    -e DOMAIN=http://localhost:3000 \
+    -e TOKEN=thisisasecrettoken \
+    -e ACTIVITY_TYPE=Listening \
+    -e ACTIVITY="music" \
+    borrageiros/discord-music-bot:latest
+```  
 ## ℹ | Info
 > **🔴Default ports of the application:**
 
