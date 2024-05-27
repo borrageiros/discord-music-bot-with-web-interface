@@ -45,6 +45,7 @@ for (const file of commandFiles) {
     const command = require(filePath);
     client.commands.set(command.data.name, command);
 }
+console.log("🔴 - app.js::46 - client.commands.set(command.data.name ->", client.commands);
 
 client.on("ready", () => {
     console.log(`🟢  Logged to discord with name: ${client.user.username}`);
