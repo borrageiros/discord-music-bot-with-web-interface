@@ -30,6 +30,7 @@ router.post('/', async (req, res) => {
         client.queue.addTrack( track );
         
         if (!client.queue.isPlaying()) await client.queue.node.play();
+        client.queue.filters.volume.setVolume(client.defaultVolume);
         
         clientEmitter.emit('clientChanged', client);
         res.status(200).json({ message: track });

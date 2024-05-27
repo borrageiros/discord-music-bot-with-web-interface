@@ -11,7 +11,7 @@ module.exports = {
 
             const embed = new EmbedBuilder()
                 .setColor(0xe838cd)
-                .setTitle(`Click here to open "${botName}" interface`)
+                .setTitle(`💿 Click here to open "${botName}" interface`)
                 .setURL(process.env.DOMAIN + "/?guild=" + interaction.guildId)
                 .setImage("https://raw.githubusercontent.com/borrageiros/discord-music-bot-with-web-interface/main/readme/screenshot.jpg");
             await interaction.deferReply();

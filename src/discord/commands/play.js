@@ -31,7 +31,9 @@ module.exports = {
             // Reproduce
             const track = new Track(client.player, results.tracks[0]);
             client.queue.addTrack( track );
+            
             if (!client.queue.isPlaying()) await client.queue.node.play();
+            client.queue.filters.volume.setVolume(client.defaultVolume);
 
             // Reply
             const image = track.thumbnail;
@@ -39,7 +41,7 @@ module.exports = {
 
             const embed = new EmbedBuilder()
                 .setColor(0xe838cd)
-                .setTitle(`Click here to open "${botName}" interface`)
+                .setTitle(`💿 Click here to open "${botName}" interface`)
                 .setURL(process.env.DOMAIN + "/?guild=" + interaction.guildId + "&channel=" + interaction.member.voice.channelId + "&track=https://www.youtube.com/watch?v=" + results.tracks[0].id)
                 .setDescription(`⏯ **Song added!**\n${title}`)
                 .setImage(image);

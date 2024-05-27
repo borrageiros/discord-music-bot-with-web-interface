@@ -22,21 +22,21 @@ module.exports = {
                     client.queue.setRepeatMode(QueueRepeatMode.TRACK)
                     embed
                         .setColor(0xe838cd)
-                        .setTitle(`Click here to open "${botName}" interface`)
+                        .setTitle(`💿 Click here to open "${botName}" interface`)
                         .setURL(process.env.DOMAIN + "/?guild=" + interaction.guildId)
                         .setDescription('🟢🔁 Loop mode enabled');
                 }else{
                     client.queue.setRepeatMode(QueueRepeatMode.OFF)
                     embed
                         .setColor(0xe838cd)
-                        .setTitle(`Click here to open "${botName}" interface`)
+                        .setTitle(`💿 Click here to open "${botName}" interface`)
                         .setURL(process.env.DOMAIN + "/?guild=" + interaction.guildId)
                         .setDescription('🔴🔁 Loop mode disabled');
                 }
             }else {
                 embed
                     .setColor(0xe838cd)
-                    .setTitle(`Click here to open "${botName}" interface`)
+                    .setTitle(`💿 Click here to open "${botName}" interface`)
                     .setURL(process.env.DOMAIN + "/?guild=" + interaction.guildId)
                     .setDescription(`🔴 There is nothing playing!`);
             }

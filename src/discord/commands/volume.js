@@ -19,19 +19,21 @@ module.exports = {
 
             if (client.queue.isPlaying()) {
                 if (isNaN(query)) {
-                    client.queue.filters.volume.setVolume(query)
+                    client.queue.filters.volume.setVolume(query);
+                    client.defaultVolume = query;
                 }else{
-                    client.queue.filters.volume.setVolume(parseInt(query))
+                    client.queue.filters.volume.setVolume(parseInt(query));
+                    client.defaultVolume = parseInt(query);
                 }
                 embed
                     .setColor(0xe838cd)
-                    .setTitle(`Click here to open "${botName}" interface`)
+                    .setTitle(`💿 Click here to open "${botName}" interface`)
                     .setURL(process.env.DOMAIN + "/?guild=" + interaction.guildId)
                     .setDescription(`🔊 Volume set to: ${query}`);
             }else {
                 embed
                     .setColor(0xe838cd)
-                    .setTitle(`Click here to open "${botName}" interface`)
+                    .setTitle(`💿 Click here to open "${botName}" interface`)
                     .setURL(process.env.DOMAIN + "/?guild=" + interaction.guildId)
                     .setDescription(`🔴 There is nothing playing!\nVolume cannot be set...`);
             }
