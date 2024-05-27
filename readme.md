@@ -76,11 +76,18 @@ yarn start
 
 ```
 {
-    "installation": "npm install && cd client && npm install && npm run build",
-    "prestart": "test -d interface || npm run build:client",
+    "installation": "yarn install && cd client && yarn install && yarn build",
+    "prestart": "test -d interface || yarn build:client",
     "start": "node src/index.js",
-    "build:client": "cd client && npm run build",
-    "dev:client": "cd client && npm run dev",
+    "build:client": "cd client && yarn build",
+    "dev:client": "cd client && yarn dev",
     "dev:server": "nodemon src/index.js"
 }
+```  
+
+- Enviorment variables for dev:  
+
+```
+SKIP_UPDATE_COMMANDS=true/false     // Skip the update the commands in the discord applicationGuildCommands (slash commands showed in discord interface)
+DELETE_PREVIUS_COMMANDS=true/false  // Delete the previous commands in the discord applicationGuildCommands (slash commands showed in discord interface) (Only works if SKIP_UPDATE_COMMANDS=true)
 ```

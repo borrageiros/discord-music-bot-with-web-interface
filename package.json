@@ -5,11 +5,11 @@
   "author": "borrageiros",
   "license": "MIT",
   "scripts": {
-    "installation": "npm install && cd client && npm install && npm run build",
-    "prestart": "test -d interface || npm run build:client",
+    "installation": "yarn install && cd client && yarn install && yarn build",
+    "prestart": "test -d interface || yarn build:client",
     "start": "node src/index.js",
-    "build:client": "cd client && npm run build",
-    "dev:client": "cd client && npm run dev",
+    "build:client": "cd client && yarn build",
+    "dev:client": "cd client && yarn dev",
     "dev:server": "nodemon src/index.js"
   },
   "dependencies": {
@@ -30,6 +30,6 @@
     "ytdl-core": "^4.11.5"
   },
   "devDependencies": {
-    "nodemon": "^2.0.20"
+    "nodemon": "^3.1.1"
   }
 }

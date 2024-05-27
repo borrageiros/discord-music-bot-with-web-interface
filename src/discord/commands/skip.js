@@ -16,13 +16,13 @@ module.exports = {
                 client.queue.node.skip([]);
                 embed
                     .setColor(0xe838cd)
-                    .setTitle(`Click here to open "${botName}" interface`)
+                    .setTitle(`💿 Click here to open "${botName}" interface`)
                     .setURL(process.env.DOMAIN + "/?guild=" + interaction.guildId)
                     .setDescription('⏭ Song skipped!');
             }else{
                 embed
                     .setColor(0xe838cd)
-                    .setTitle(`Click here to open "${botName}" interface`)
+                    .setTitle(`💿 Click here to open "${botName}" interface`)
                     .setURL(process.env.DOMAIN + "/?guild=" + interaction.guildId)
                     .setDescription(`🔴 There is nothing playing!`);
             }

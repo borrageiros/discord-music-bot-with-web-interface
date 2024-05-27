@@ -13,9 +13,11 @@ router.post('/', async (req, res) => {
     try{
         // Convert string to number if necessary
         if (isNaN(volume)) {
-            client.queue.filters.volume.setVolume(volume)
+            client.queue.filters.volume.setVolume(volume);
+            client.defaultVolume = query;
         }else{
-            client.queue.filters.volume.setVolume(parseInt(volume))
+            client.queue.filters.volume.setVolume(parseInt(volume));
+            client.defaultVolume = parseInt(volume);
         }
         
         clientEmitter.emit('clientChanged', client);

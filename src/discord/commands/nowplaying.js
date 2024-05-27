@@ -1,5 +1,15 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
+function getSourceString(input) {
+    const sources = {
+        "youtube": "🔴YouTube",
+        "spotify": "🟢Spotify",
+        "soundcloud": "🟠SoundCloud",
+        "apple_music": "🟣AppleMusic",
+    };
+    return sources[input] || undefined;
+}
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('nowplaying')
@@ -11,24 +21,26 @@ module.exports = {
 
            
             const currentTrack = client.queue && client.queue.currentTrack && client.queue.currentTrack;
-            const title = currentTrack? currentTrack.title : "Nothing is playing";
-            const image = currentTrack? currentTrack.thumbnail : "";
+            const title = currentTrack && currentTrack.title;
+            const image = currentTrack && currentTrack.thumbnail;
+            const url = currentTrack && currentTrack.url;
+            const source = currentTrack && currentTrack.raw && currentTrack.raw.source;
 
             let embed = new EmbedBuilder();
 
-            if (currentTrack && title && image) {
+            if (currentTrack && title && image && url && source) {
                 embed
                     .setColor(0xe838cd)
-                    .setTitle(`Click here to open "${botName}" interface`)
-                    .setURL(process.env.DOMAIN + "/?guild=" + interaction.guildId)
-                    .setDescription(`🎧 **Now playing:**\n${title}`)
+                    .setTitle(title)
+                    .setURL(url)
+                    .setDescription(`🎧 **Now playing** on ${getSourceString(source)}`)
                     .setImage(image);
             }else {
                 embed
                     .setColor(0xe838cd)
-                    .setTitle(`Click here to open "${botName}" interface`)
+                    .setTitle(`💿 Click here to open "${botName}" interface`)
                     .setURL(process.env.DOMAIN + "/?guild=" + interaction.guildId)
-                    .setDescription(`🎧 **Now playing:**\n${title}`)
+                    .setDescription(`🎧 Nothing is playing`)
             }
 
             await interaction.reply({ embeds: [embed] });
