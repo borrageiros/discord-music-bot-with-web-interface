@@ -63,10 +63,11 @@ yarn installation
     - Copy the ".env.example" file to ".env" and fill in the values
     ```
     TOKEN=                          // Bot Secret Token
-    ACTIVITY_TYPE=Listening         // Activity of the bot: "Streaming", "Listening", "Watching", "Playing"
-    ACTIVITY=music                  // Text after the activityType, this example output: Listening to music
     DOMAIN=http://localhost:5178    // The domain where you will be running the application, default "localhost", and default port 5178
-    PORT=5178                       // The port where you will be running the application, default 5178
+    ACTIVITY_TYPE=Listening         // (Optional) (Default: "Listening") Activity of the bot, options: "Streaming", "Listening", "Watching", "Playing", "Custom" or "Competing"
+    ACTIVITY=music                  // (Optional) (Default: "music") Text after the activityType, this example output: Listening to music
+    PORT=5178                       // (Optional) (Default: 5178) The port where you will be running the application
+    DELETE_MESSAGES_AFTER=          // (Optional) (Default: OFF) The milliseconds it takes for public messages to be deleted
     ```
 - Start
     > This will launch the server and the client
@@ -92,6 +93,8 @@ yarn start
     ```
     borrageiros/discord-music-bot:arm64
     ```  
+
+❗ **using the 'PORT' environment variable with docker will make the app not work**
 
 Example command:
 
@@ -136,7 +139,7 @@ docker run -d \
 
 ```
 SKIP_UPDATE_COMMANDS=true/false     // Skip the update the commands in the discord applicationGuildCommands (slash commands showed in discord interface)
-DELETE_PREVIUS_COMMANDS=true/false  // Delete the previous commands in the discord applicationGuildCommands (slash commands showed in discord interface) (Only works if SKIP_UPDATE_COMMANDS=true)
+DELETE_PREVIUS_COMMANDS=true/false  // Delete the previous commands in the discord applicationGuildCommands (slash commands showed in discord interface) (Only works if SKIP_UPDATE_COMMANDS=false)
 ```  
 
 ***

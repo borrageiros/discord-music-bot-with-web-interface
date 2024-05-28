@@ -9,7 +9,8 @@
     "prestart": "test -d interface || yarn build:client",
     "start": "node src/index.js",
     "build:client": "cd client && yarn build",
-    "dev:client": "cd client && yarn dev",
+    "dev:client": "concurrently \"yarn dev\" \"yarn dev:only:client\"",
+    "dev:only:client": "cd client && yarn dev",
     "dev:server": "nodemon src/index.js"
   },
   "dependencies": {

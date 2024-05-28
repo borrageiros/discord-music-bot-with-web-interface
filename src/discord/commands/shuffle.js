@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { QueueRepeatMode } = require('discord-player');
+const deleteAfterTimeout = require('../../middlewares/delete.discord.messages');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -11,6 +11,7 @@ module.exports = {
             const botName = botMember ? botMember.displayName : client.user.username;
 
             let embed = new EmbedBuilder();
+            let ephemeral = false;
 
             if (client.queue.isPlaying()) {
                 if (!client.queue.isShuffling) {
@@ -33,9 +34,11 @@ module.exports = {
                     .setTitle(`💿 Click here to open "${botName}" interface`)
                     .setURL(process.env.DOMAIN + "/?guild=" + interaction.guildId)
                     .setDescription(`🔴 There is nothing playing!`);
+                ephemeral = true;
             }
 
-            await interaction.reply({ embeds: [embed] });
+            const message = await interaction.reply({ embeds: [embed], ephemeral: ephemeral });
+            deleteAfterTimeout(message);
         } catch (error) {
             console.error(error);
         }
