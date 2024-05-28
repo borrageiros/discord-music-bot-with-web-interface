@@ -147,33 +147,44 @@ DELETE_PREVIUS_COMMANDS=true/false  // Delete the previous commands in the disco
 
 ## 👾 | Discord commands/integration
 > **Apart from the interface, there are some commands to control the bot directly from Discord:**  
+Public responses can be deleted from the chat automatically with the 'DELETE_MESSAGES_AFTER' environment variable. 
 
 - **/link**  
-    Send to the channel a link to open the web reproducer
+    Send to the channel a link to open the web reproducer  
+    -👥 Public response
 
 - **/nowplaying**  
-    See which song is currently playing
+    See which song is currently playing  
+    -🔒 Private response
 
 - **/pause**  
-    Pauses the current song
+    Pauses the current song  
+    -👥 Public response
 
 - **/play**  
-    Play music by the given song name or song link
+    Play music by the given song name or song link  
+    -👥 Public response
 
 - **/queue**  
-    Shows the current queue
+    Shows the current queue  
+    -🔒 Private response
 
 - **/repeat**  
-    Toggle the repeat loop mode
+    Toggle the repeat loop mode  
+    -👥 Public response
 
 - **/resume**  
-    Resumes the current song
+    Resumes the current song  
+    -👥 Public response
 
 - **/shuffle**  
-    Toggle the shuffle mode on the current queue
+    Toggle the shuffle mode on the current queue  
+    -👥 Public response
 
 - **/skip**  
-    Skip the current playing song
+    Skip the current playing song  
+    -👥 Public response
 
 - **/volume**  
-    Change current playing volume
+    Change current playing volume  
+    -👥 Public response
