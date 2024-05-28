@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const deleteAfterTimeout = require('../../middlewares/delete.discord.messages');
 
 function getSourceString(input) {
     const sources = {
@@ -24,6 +25,7 @@ module.exports = {
             const fullQueue = [currentTrack, ...tracks];
 
             let embed = new EmbedBuilder();
+            let deleteMessage = false;
 
             if (currentTrack) {
                 let description = `🎧📋 **Queue: **\n\n`;
@@ -41,10 +43,12 @@ module.exports = {
                     .setColor(0xe838cd)
                     .setTitle(`💿 Click here to open "${botName}" interface`)
                     .setURL(process.env.DOMAIN + "/?guild=" + interaction.guildId)
-                    .setDescription(`🎧 Nothing is playing`);
+                    .setDescription(`🔴 There is nothing playing!`);
+                deleteMessage = true;
             }
 
-            await interaction.reply({ embeds: [embed] });
+            const message = await interaction.reply({ embeds: [embed], ephemeral: true  });
+            if (deleteMessage) { deleteAfterTimeout(message) }
         } catch (error) {
             console.error(error);
         }

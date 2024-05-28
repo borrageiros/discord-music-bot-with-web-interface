@@ -45,12 +45,14 @@ for (const file of commandFiles) {
     const command = require(filePath);
     client.commands.set(command.data.name, command);
 }
-console.log("🔴 - app.js::46 - client.commands.set(command.data.name ->", client.commands);
 
 client.on("ready", () => {
     console.log(`🟢  Logged to discord with name: ${client.user.username}`);
 	client.user.setPresence({
-		activities: [{ name: `${process.env.ACTIVITY}`, type: ActivityType[process.env.ACTIVITY_TYPE] }],
+        activities: [{
+            name: process.env.ACTIVITY || "music",
+            type: ActivityType[process.env.ACTIVITY_TYPE] || ActivityType.Listening
+        }],
 		status: 1,
 	});
 

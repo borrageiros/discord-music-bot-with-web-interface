@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { QueryType, Track } = require('discord-player');
+const deleteAfterTimeout = require('../../middlewares/delete.discord.messages');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -45,7 +46,8 @@ module.exports = {
                 .setURL(process.env.DOMAIN + "/?guild=" + interaction.guildId + "&channel=" + interaction.member.voice.channelId + "&track=https://www.youtube.com/watch?v=" + results.tracks[0].id)
                 .setDescription(`⏯ **Song added!**\n${title}`)
                 .setImage(image);
-            await interaction.reply({ embeds: [embed] });
+                const message = await interaction.reply({ embeds: [embed] });
+                deleteAfterTimeout(message);
         } catch (error) {
             console.error(error);
         }
