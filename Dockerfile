@@ -10,4 +10,4 @@ RUN yarn installation
 
 EXPOSE 5678
 
-CMD ["npm", "start"]
+CMD ["yarn", "start"]
