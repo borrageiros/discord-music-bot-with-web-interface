@@ -61,28 +61,15 @@ client.on("ready", () => {
             try {
                 console.log("📤  Updating commands...")
                 const rest = new REST({ version: '9' }).setToken(process.env.TOKEN);
-                (async () => {
-                    const guilds = client.guilds.cache.map(guild => ({ id: guild.id, name: guild.name }));
-        
-                    for (const guild of guilds) {
-                        // Delete previus commands saved on the server
-                        if (process.env.DELETE_PREVIUS_COMMANDS === "true") {
-                            const commands = await rest.get(Routes.applicationGuildCommands(client.user.id, guild.id));
-                            for (const command of commands) {
-                                await rest.delete(Routes.applicationGuildCommand(client.user.id, guild.id, command.id));
-                            }
-                            console.log(`🆑  Deleted old commands for guild "${guild.name}"`);
-                        }
-        
-                        // Add new commands in the server
-                        await rest.put(
-                            Routes.applicationGuildCommands(client.user.id, guild.id),
-                            { body: client.commands.map(command => command.data.toJSON()) },
-                        );
-                        console.log(`🆕  Registered commands for guild "${guild.name}"`);
-                    }
-                    console.log("📤  All commands updated!!!")
-                })();
+                const commands = client.commands.map(command => command.data.toJSON());
+
+                if (process.env.DELETE_PREVIUS_COMMANDS === "true") {
+                    await rest.delete(Routes.applicationCommands(client.user.id), { body: commands });
+                    console.log(`🆑  Deleted old commands`);
+                }
+    
+                await rest.put(Routes.applicationCommands(client.user.id), { body: commands });
+                console.log("📤  All commands updated");
             } catch (error) {
                 console.error(error);
             }

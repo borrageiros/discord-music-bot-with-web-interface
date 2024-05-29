@@ -13,14 +13,14 @@
     }
 
     onMount(async () => {
+        const currentUrl = window.location.href;
         try {
-            const currentUrl = window.location.href;
             const url = new URL(currentUrl);
             const params = new URLSearchParams(url.search);
             const res = await getChannels(params.get('guild'));
             channels = res.channels;
         } catch (error) {
-            showNotification("Server not selected!!!", "error", 10000);
+            window.location.href = currentUrl.split("?")[0];
         }
     });
 
