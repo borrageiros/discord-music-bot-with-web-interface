@@ -94,7 +94,7 @@ yarn start
     borrageiros/discord-music-bot:arm64
     ```  
 
-❗ **using the 'PORT' environment variable with docker will make the app not work**
+❗ **Using the 'PORT' environment variable with Docker is mandatory**
 
 Example command:
 
@@ -102,6 +102,7 @@ Example command:
 docker run -d \
     --name=discord-music-bot \
     -p 3000:5178 \
+    -e PORT=5178 \
     -e DOMAIN=http://localhost:3000 \
     -e TOKEN=thisisasecrettoken \
     -e ACTIVITY_TYPE=Listening \
