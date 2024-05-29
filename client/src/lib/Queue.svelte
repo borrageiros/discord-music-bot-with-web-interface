@@ -1,29 +1,11 @@
 <script>
     import SongCard from './SongCard.svelte';
-    import { onMount } from 'svelte';
     import PlaySvg from '/icons/play.svg'
     import { playSong } from '../api';
     import MenuButton from './ToggleMenuButton.svelte';
 
     export let phoneQueueVisible = false;
     export let appStatus;
-    let trackParam;
-    let channelParam;
-
-    onMount(async () => {
-        try {
-            const queryParams = new URLSearchParams(window.location.search);
-            trackParam = queryParams.get('track');
-            channelParam = queryParams.get('channel');
-            if ( trackParam && channelParam ){
-                await playSong(trackParam, channelParam )
-                const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-                window.location.href = newUrl;
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    })
 
     let searchQuery = '';
     

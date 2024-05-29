@@ -4,7 +4,7 @@ const deleteAfterTimeout = require('../../middlewares/delete.discord.messages');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('play')
+        .setName('playy')
         .setDescription('Play music by the given song name or song link')
         .addStringOption(option =>
             option.setName('song')
@@ -19,15 +19,8 @@ module.exports = {
             const results = await client.player.search(query, { searchEngine: QueryType.AUTO });
             const voiceChannel = interaction.member.voice.channel;
 
-            if (!voiceChannel) {
-                return interaction.reply('You need to be in a voice channel to use this command!');
-            }
-
-            try{
-                if (!client.queue.connection) await client.queue.connect(voiceChannel.id);
-            } catch {
-                return interaction.reply('Something went wrong: I cant connect to the voice channel... try again');
-            }
+            let embed = new EmbedBuilder();
+            let ephemeral = false;
 
             // Reproduce
             const track = new Track(client.player, results.tracks[0]);
@@ -40,14 +33,33 @@ module.exports = {
             const image = track.thumbnail;
             const title = track.title;
 
-            const embed = new EmbedBuilder()
-                .setColor(0xe838cd)
-                .setTitle(`💿 Click here to open "${botName}" interface`)
-                .setURL(process.env.DOMAIN + "/?guild=" + interaction.guildId + "&channel=" + interaction.member.voice.channelId + "&track=https://www.youtube.com/watch?v=" + results.tracks[0].id)
-                .setDescription(`⏯ **Song added!**\n${title}`)
-                .setImage(image);
-                const message = await interaction.reply({ embeds: [embed] });
-                deleteAfterTimeout(message);
+            if (voiceChannel) {
+                try{
+                    if (!client.queue.connection) await client.queue.connect(voiceChannel.id);
+                    embed = new EmbedBuilder()
+                        .setColor(0xe838cd)
+                        .setTitle(`💿 Click here to open "${botName}" interface`)
+                        .setURL(process.env.DOMAIN + `/?guild=${interaction.guildId}`)
+                        .setDescription(`⏯ **Song added!**\n${title}`)
+                        .setImage(image);
+                } catch {
+                    embed
+                        .setColor(0xe838cd)
+                        .setTitle(`💿 Click here to open "${botName}" interface`)
+                        .setURL(process.env.DOMAIN + "/?guild=" + interaction.guildId)
+                        .setDescription(`🔴 Something went wrong: I cant connect to the voice channel... try again`);
+                    ephemeral = true;
+                }
+            }else {
+                embed
+                    .setColor(0xe838cd)
+                    .setTitle(`💿 Click here to open "${botName}" interface`)
+                    .setURL(process.env.DOMAIN + "/?guild=" + interaction.guildId)
+                    .setDescription(`🔴 You need to be in a voice channel to use this command!`);
+                ephemeral = true;
+            }
+            const message = await interaction.reply({ embeds: [embed], ephemeral: ephemeral });
+            deleteAfterTimeout(message);
         } catch (error) {
             console.error(error);
         }

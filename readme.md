@@ -106,6 +106,7 @@ docker run -d \
     -e TOKEN=thisisasecrettoken \
     -e ACTIVITY_TYPE=Listening \
     -e ACTIVITY="music" \
+    -e DELETE_MESSAGES_AFTER=15000 \
     borrageiros/discord-music-bot:latest
 ```  
 
