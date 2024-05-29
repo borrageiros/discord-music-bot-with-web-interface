@@ -1,4 +1,5 @@
 node_modules
+interface
 readme
 client/node_modules
 .env
