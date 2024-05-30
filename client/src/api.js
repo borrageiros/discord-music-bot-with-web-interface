@@ -1,5 +1,8 @@
 const currentUrl = window.location.href;
-const url = currentUrl.split('?')[0] + "api";
+const urlObject = new URL(currentUrl);
+const url = urlObject.origin + "/api";
+const params = new URLSearchParams(urlObject.search);
+const guild = params.get('guild');
 
 // --------------------------------------------------------------
 export async function playSong(trackUrl, voiceChannel) {
@@ -10,6 +13,7 @@ export async function playSong(trackUrl, voiceChannel) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
+                discordGuild: guild,
                 url: trackUrl,
                 voiceChannelId: voiceChannel
             })
@@ -36,6 +40,7 @@ export async function connect(voiceChannel) {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
+                    discordGuild: guild,
                     voiceChannelId: voiceChannel
                 })
             });
@@ -61,6 +66,7 @@ export async function seek(milliseconds) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
+                discordGuild: guild,
                 time: milliseconds
             })
         });
@@ -85,7 +91,11 @@ export async function searcher(query, engine) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ query: query, engine: engine })
+            body: JSON.stringify({
+                discordGuild: guild,
+                query: query,
+                engine: engine
+            })
         });
         
         if (!response.ok) {
@@ -108,7 +118,11 @@ export async function moveTrack(from, to) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ from: from, to: to })
+            body: JSON.stringify({
+                discordGuild: guild,
+                from: from,
+                to: to
+            })
         });
         
         if (!response.ok) {
@@ -132,6 +146,7 @@ export async function setVolume(volume) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
+                discordGuild: guild,
                 volume: volume
             })
         });
@@ -151,7 +166,7 @@ export async function setVolume(volume) {
 // --------------------------------------------------------------
 export async function getAppStatus() {
     try {
-        const response = await fetch(url+"/get-app-status", {
+        const response = await fetch(url+"/get-app-status/"+guild, {
             method: 'GET'
         });
         
@@ -170,7 +185,7 @@ export async function getAppStatus() {
 // --------------------------------------------------------------
 export async function toggleShuffle() {
     try {
-        const response = await fetch(url+"/toggle-shuffle", {
+        const response = await fetch(url+"/toggle-shuffle/"+guild, {
             method: 'GET'
         });
         
@@ -189,7 +204,7 @@ export async function toggleShuffle() {
 // --------------------------------------------------------------
 export async function toggleRepeat() {
     try {
-        const response = await fetch(url+"/toggle-repeat", {
+        const response = await fetch(url+"/toggle-repeat/"+guild, {
             method: 'GET'
         });
         
@@ -208,7 +223,7 @@ export async function toggleRepeat() {
 // --------------------------------------------------------------
 export async function getChannels(guild) {
     try {
-        const response = await fetch(url+"/get-channels/" + guild, {
+        const response = await fetch(url+"/get-channels/"+guild, {
             method: 'GET'
         });
         
@@ -227,7 +242,7 @@ export async function getChannels(guild) {
 // --------------------------------------------------------------
 export async function getCurrentTrack() {
     try {
-        const response = await fetch(url+"/get-current-track", {
+        const response = await fetch(url+"/get-current-track/"+guild, {
             method: 'GET'
         });
         
@@ -246,7 +261,7 @@ export async function getCurrentTrack() {
 // --------------------------------------------------------------
 export async function pause() {
     try {
-        const response = await fetch(url+"/pause", {
+        const response = await fetch(url+"/pause/"+guild, {
             method: 'GET'
         });
         
@@ -265,7 +280,7 @@ export async function pause() {
 // --------------------------------------------------------------
 export async function resume() {
     try {
-        const response = await fetch(url+"/resume", {
+        const response = await fetch(url+"/resume/"+guild, {
             method: 'GET'
         });
         
@@ -284,7 +299,7 @@ export async function resume() {
 // --------------------------------------------------------------
 export async function skip() {
     try {
-        const response = await fetch(url+"/skip", {
+        const response = await fetch(url+"/skip/"+guild, {
             method: 'GET'
         });
         
@@ -309,6 +324,7 @@ export async function deleteTrack(trackUrl) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
+                discordGuild: guild,
                 url: trackUrl
             })
         });

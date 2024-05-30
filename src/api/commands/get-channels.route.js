@@ -24,10 +24,10 @@ router.get('/:guildId', async (req, res) => {
             type: channel.type
         }));
         
-        clientEmitter.emit('clientChanged', client);
+        clientEmitter.emit('clientChanged', client, guildId );
         res.status(200).json({ channels: voiceChannelList });
     } catch (error) {
-        console.error(error);
+        // console.error(error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });

@@ -13,8 +13,8 @@ module.exports = {
             let embed = new EmbedBuilder();
             let ephemeral = false;
 
-            if (client.queue.isPlaying()) {
-                if (!client.queue.isShuffling) {
+            if (client.queues[interaction.guildId].isPlaying()) {
+                if (!client.queues[interaction.guildId].isShuffling) {
                     embed
                         .setColor(0xe838cd)
                         .setTitle(`💿 Click here to open "${botName}" interface`)
@@ -27,7 +27,7 @@ module.exports = {
                         .setURL(process.env.DOMAIN + "/?guild=" + interaction.guildId)
                         .setDescription('🔴🔀 Shuffle mode disabled');
                 }
-                client.queue.toggleShuffle();
+                client.queues[interaction.guildId].toggleShuffle();
             }else {
                 embed
                     .setColor(0xe838cd)

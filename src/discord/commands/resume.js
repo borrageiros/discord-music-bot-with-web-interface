@@ -13,8 +13,8 @@ module.exports = {
             let embed = new EmbedBuilder();
             let ephemeral = false;
 
-            if (client.queue.isPlaying()) {
-                client.queue.node.resume();
+            if (client.queues[interaction.guildId].isPlaying()) {
+                client.queues[interaction.guildId].node.resume();
                 embed
                     .setColor(0xe838cd)
                     .setTitle(`💿 Click here to open "${botName}" interface`)

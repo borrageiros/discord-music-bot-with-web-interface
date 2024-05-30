@@ -4,21 +4,31 @@ const { QueueRepeatMode } = require('discord-player');
 
 console.log("+ Toggle-repeat command-route loaded");
 
-router.get('/', async (req, res) => {
+router.get('/:discordGuild', async (req, res) => {
+    const discordGuild = req.params.discordGuild;
+
+    if (!discordGuild) {
+        return res.status(400).json({ error: 'No discordGuild provided' });
+    }
+
+    if (!client.queues[discordGuild]) {
+        return res.status(400).json({ error: 'There is no player on the provided discordGuild' });
+    }
+
     try{
         // MODES
         // 0 > Off
         // 1 > Track
         // 2 > Queue
         // 3 > Autoplay
-        if (client.queue.repeatMode == QueueRepeatMode.OFF){
-            client.queue.setRepeatMode(QueueRepeatMode.TRACK)
+        if (client.queues[discordGuild].repeatMode == QueueRepeatMode.OFF){
+            client.queues[discordGuild].setRepeatMode(QueueRepeatMode.TRACK)
         }else{
-            client.queue.setRepeatMode(QueueRepeatMode.OFF)
+            client.queues[discordGuild].setRepeatMode(QueueRepeatMode.OFF)
         }
         
-        clientEmitter.emit('clientChanged', client);
-        res.status(200).json({ message: client.queue.repeatMode });
+        clientEmitter.emit('clientChanged', client, discordGuild);
+        res.status(200).json({ message: client.queues[discordGuild].repeatMode });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: `Something went wrong: ${error.message}` });

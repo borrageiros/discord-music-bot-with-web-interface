@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { QueryType, Track } = require('discord-player');
 const deleteAfterTimeout = require('../../middlewares/delete.discord.messages');
+const { GuildQueue } = require('discord-player');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -23,12 +24,14 @@ module.exports = {
             let ephemeral = false;
 
             // Reproduce
-            if (!client.queue.connection) await client.queue.connect(voiceChannel.id);
+            if (!client.queues[interaction.guildId]) {
+                client.queues[interaction.guildId] = new GuildQueue(client.player, {});
+            }
+            if (client.queues[interaction.guildId] && !client.queues[interaction.guildId].connection) await client.queues[interaction.guildId].connect(voiceChannel.id);
             const track = new Track(client.player, results.tracks[0]);
-            client.queue.addTrack( track );
-            
-            if (!client.queue.isPlaying()) await client.queue.node.play();
-            client.queue.filters.volume.setVolume(client.defaultVolume);
+            client.queues[interaction.guildId].addTrack( track );
+            if (!client.queues[interaction.guildId].isPlaying()) await client.queues[interaction.guildId].node.play();
+            client.queues[interaction.guildId].filters.volume.setVolume(client.defaultVolume);
 
             // Reply
             const image = track.thumbnail;

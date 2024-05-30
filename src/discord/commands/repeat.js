@@ -19,16 +19,16 @@ module.exports = {
             let embed = new EmbedBuilder();
             let ephemeral = false;
 
-            if (client.queue.isPlaying()) {
-                if (client.queue.repeatMode == QueueRepeatMode.OFF){
-                    client.queue.setRepeatMode(QueueRepeatMode.TRACK)
+            if (client.queues[interaction.guildId].isPlaying()) {
+                if (client.queues[interaction.guildId].repeatMode == QueueRepeatMode.OFF){
+                    client.queues[interaction.guildId].setRepeatMode(QueueRepeatMode.TRACK)
                     embed
                         .setColor(0xe838cd)
                         .setTitle(`💿 Click here to open "${botName}" interface`)
                         .setURL(process.env.DOMAIN + "/?guild=" + interaction.guildId)
                         .setDescription('🟢🔁 Loop mode enabled');
                 }else{
-                    client.queue.setRepeatMode(QueueRepeatMode.OFF)
+                    client.queues[interaction.guildId].setRepeatMode(QueueRepeatMode.OFF)
                     embed
                         .setColor(0xe838cd)
                         .setTitle(`💿 Click here to open "${botName}" interface`)

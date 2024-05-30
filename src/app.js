@@ -31,10 +31,10 @@ const player = new Player(client, {
     }
 });
 client.player = player;
-client.defaultVolume = 30;
-const queue = new GuildQueue(player, {})
-client.queue = queue;
-player.extractors.loadDefault();
+client.defaultVolume = 1;
+client.player.extractors.loadDefault();
+client.queues = [];
+client.sockets = [];
 
 // DISCORD COMMANDS
 client.commands = new Collection();
@@ -86,16 +86,22 @@ client.on("interactionCreate", async interaction => {
 
     try {
         await command.execute(interaction, client);
-        clientEmitter.emit('clientChanged', client);
+        clientEmitter.emit('clientChanged', client, interaction.guildId);
     } catch (error) {
         console.error(error);
         await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
     }
 });
 
-client.on("disconnect", () => {
-    clientEmitter.emit('clientChanged', client);
-})
+client.on("voiceStateUpdate", ( oldState, newState ) => {
+    if ( oldState.channelId && (oldState.channelId !== newState.channelId) && (client.queues[oldState.guild.id] || client.queues[newState.guild.id]) ) {
+        if ( !newState.channelId && newState.id === client.user.id) {
+            client.queues[oldState.guild.id].clear();
+            delete client.queues[oldState.guild.id];
+            clientEmitter.emit('clientChanged', client, oldState.guild.id);
+        }
+    }
+});
 
 client.login(process.env.TOKEN);
 module.exports = { client, clientEmitter };
@@ -116,57 +122,95 @@ const io = new Server(server, {
 });
 
 io.on('connection', (socket) => {
-    const sendUpdate = (updatedClient) => {
-        const currentTrack = client.queue.currentTrack;
-        const progressBar = client.queue.node.createProgressBar({separator: "", indicator: "", length: 1});
-        const times = progressBar && progressBar.split(" ");
-        const currentDuration = progressBar && times[0];
-        const currentTrackData = {
-            id: currentTrack && currentTrack.id,
-            title: currentTrack && currentTrack.title,
-            description: currentTrack && currentTrack.duration,
-            author: currentTrack && currentTrack.author,
-            url: currentTrack && currentTrack.url,
-            thumbnail: currentTrack && currentTrack.thumbnail,
-            duration: currentTrack && currentTrack.duration,
-            currentDuration: currentDuration, // ----
-            durationMS: currentTrack && currentTrack.durationMS,
-            views: currentTrack && currentTrack.views,
-            requestedBy: currentTrack && currentTrack.requestedBy,
-            playlist: currentTrack && currentTrack.playlist
+    const sendUpdate = ( updatedClient, discordGuild ) => {
+        if (client.queues[discordGuild]) {
+            const currentTrack = client.queues[discordGuild].currentTrack;
+            const progressBar = client.queues[discordGuild].node.createProgressBar({separator: "", indicator: "", length: 1});
+            const times = progressBar && progressBar.split(" ");
+            const currentDuration = progressBar && times[0];
+            const currentTrackData = {
+                id: currentTrack && currentTrack.id,
+                title: currentTrack && currentTrack.title,
+                description: currentTrack && currentTrack.duration,
+                author: currentTrack && currentTrack.author,
+                url: currentTrack && currentTrack.url,
+                thumbnail: currentTrack && currentTrack.thumbnail,
+                duration: currentTrack && currentTrack.duration,
+                currentDuration: currentDuration, // ----
+                durationMS: currentTrack && currentTrack.durationMS,
+                views: currentTrack && currentTrack.views,
+                requestedBy: currentTrack && currentTrack.requestedBy,
+                playlist: currentTrack && currentTrack.playlist
+            }
+    
+            const tracks = updatedClient.queues[discordGuild].tracks.toArray();
+            const fullQueue = [currentTrack, ...tracks];
+            const volumeString = updatedClient.queues[discordGuild].filters.volume ? updatedClient.queues[discordGuild].filters.volume.toString() : 0;
+            const volumeNumber = volumeString && parseInt(volumeString.replace('%', ''), 10);
+            const volume = volumeNumber && volumeNumber;
+            let isPlaying
+            if (client.queues[discordGuild].node.isPaused())
+                isPlaying = false
+            else{
+                isPlaying = client.queues[discordGuild].isPlaying();
+            }
+            const connectedChannel = client.queues[discordGuild].channel;
+            const isShuffling = client.queues[discordGuild].isShuffling;
+            const isRepeating = client.queues[discordGuild].repeatMode;
+    
+            socket.to( discordGuild ).emit('updateVariable', {
+                currentTrack: currentTrackData,
+                tracks: fullQueue,
+                volume,
+                isPlaying,
+                channel: connectedChannel ? connectedChannel.id : null,
+                shuffle: isShuffling,
+                repeat: isRepeating
+            });
+        }else {
+            socket.to( discordGuild ).emit('updateVariable', {
+                currentTrack: "",
+                tracks: [],
+                volume: client.defaultVolume,
+                isPlaying: null,
+                channel: null,
+                shuffle: null,
+                repeat: null
+            });
         }
-
-        const tracks = updatedClient.queue.tracks.toArray();
-        const fullQueue = [currentTrack, ...tracks];
-        const volumeString = updatedClient.queue.filters.volume ? updatedClient.queue.filters.volume.toString() : 0;
-        const volumeNumber = volumeString && parseInt(volumeString.replace('%', ''), 10);
-        const volume = volumeNumber && volumeNumber;
-        let isPlaying
-        if (updatedClient.queue.node.isPaused())
-            isPlaying = false
-        else{
-            isPlaying = updatedClient.queue.isPlaying();
-        }
-        const connectedChannel = client.queue.channel;
-        const isShuffling = client.queue.isShuffling;
-        const isRepeating = client.queue.repeatMode;
-
-        socket.emit('updateVariable', {
-            currentTrack: currentTrackData,
-            tracks: fullQueue,
-            volume,
-            isPlaying,
-            channel: connectedChannel ? connectedChannel.id : null,
-            shuffle: isShuffling,
-            repeat: isRepeating
-        });
     };
 
-    sendUpdate(client);
-    setInterval(() => sendUpdate(client), 5000);
+    const updateAllSocketRooms = (updatedClient) => {
+        Object.keys(updatedClient.sockets).forEach(socketId => {
+            const discordGuild = updatedClient.sockets[socketId];
+            if (discordGuild) {
+                sendUpdate(updatedClient, discordGuild);
+            }
+        });
+    }
 
-    clientEmitter.on('clientChanged', (updatedClient) => {
-        sendUpdate(updatedClient);
+    setInterval(() => updateAllSocketRooms( client ), 5000);
+    updateAllSocketRooms( client )
+
+    clientEmitter.on('clientChanged', ( updatedClient, discordGuild ) => {
+        sendUpdate( updatedClient, discordGuild );
+    });
+
+    socket.on('joinDiscordGuild', ({ discordGuild }) => {
+        if (discordGuild) {
+            socket.join(discordGuild);
+            client.sockets[socket.id] = discordGuild;
+            sendUpdate( client, discordGuild );
+        }
+    });
+
+    socket.on('disconnect', () => {
+        const discordGuild = client.sockets[socket.id];
+    
+        if (discordGuild) {
+            socket.leave(discordGuild);
+            delete client.sockets[socket.id];
+        }
     });
 });
 
