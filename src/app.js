@@ -31,7 +31,7 @@ const player = new Player(client, {
     }
 });
 client.player = player;
-client.defaultVolume = 1;
+client.defaultVolume = 30;
 client.player.extractors.loadDefault();
 client.queues = [];
 client.sockets = [];
