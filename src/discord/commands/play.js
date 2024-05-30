@@ -4,7 +4,7 @@ const deleteAfterTimeout = require('../../middlewares/delete.discord.messages');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('playy')
+        .setName('play')
         .setDescription('Play music by the given song name or song link')
         .addStringOption(option =>
             option.setName('song')
@@ -23,6 +23,7 @@ module.exports = {
             let ephemeral = false;
 
             // Reproduce
+            if (!client.queue.connection) await client.queue.connect(voiceChannel.id);
             const track = new Track(client.player, results.tracks[0]);
             client.queue.addTrack( track );
             
@@ -35,7 +36,6 @@ module.exports = {
 
             if (voiceChannel) {
                 try{
-                    if (!client.queue.connection) await client.queue.connect(voiceChannel.id);
                     embed = new EmbedBuilder()
                         .setColor(0xe838cd)
                         .setTitle(`💿 Click here to open "${botName}" interface`)
