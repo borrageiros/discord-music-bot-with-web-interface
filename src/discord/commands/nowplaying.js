@@ -21,7 +21,7 @@ module.exports = {
             const botName = botMember ? botMember.displayName : client.user.username;
 
            
-            const currentTrack = client.queue && client.queue.currentTrack && client.queue.currentTrack;
+            const currentTrack = client.queues[interaction.guildId] && client.queues[interaction.guildId].currentTrack && client.queues[interaction.guildId].currentTrack;
             const title = currentTrack && currentTrack.title;
             const image = currentTrack && currentTrack.thumbnail;
             const url = currentTrack && currentTrack.url;

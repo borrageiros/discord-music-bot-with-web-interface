@@ -19,12 +19,12 @@ module.exports = {
             let embed = new EmbedBuilder();
             let ephemeral = false;
 
-            if (client.queue.isPlaying()) {
+            if (client.queues[interaction.guildId].isPlaying()) {
                 if (isNaN(query)) {
-                    client.queue.filters.volume.setVolume(query);
+                    client.queues[interaction.guildId].filters.volume.setVolume(query);
                     client.defaultVolume = query;
                 }else{
-                    client.queue.filters.volume.setVolume(parseInt(query));
+                    client.queues[interaction.guildId].filters.volume.setVolume(parseInt(query));
                     client.defaultVolume = parseInt(query);
                 }
                 embed

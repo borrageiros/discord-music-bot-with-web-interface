@@ -3,11 +3,21 @@ const { client, clientEmitter } = require('../../app');
 
 console.log("+ Get-queue command-route loaded");
 
-router.get('/', async (req, res) => {
-    try{
-        const currentTrack = client.queue.currentTrack;
+router.get('/:discordGuild', async (req, res) => {
+    const discordGuild = req.params.discordGuild;
 
-        const progressBar = client.queue.node.createProgressBar({separator: "", indicator: "", length: 1});
+    if (!discordGuild) {
+        return res.status(400).json({ error: 'No discordGuild provided' });
+    }
+
+    if (!client.queues[discordGuild]) {
+        return res.status(400).json({ error: 'There is no player on the provided discordGuild' });
+    }
+
+    try{
+        const currentTrack = client.queues[discordGuild].currentTrack;
+
+        const progressBar = client.queues[discordGuild].node.createProgressBar({separator: "", indicator: "", length: 1});
         const times = progressBar && progressBar.split(" ");
         const currentDuration = progressBar && times[0];
 
@@ -26,7 +36,7 @@ router.get('/', async (req, res) => {
             playlist: currentTrack && currentTrack.playlist
         }
 
-        clientEmitter.emit('clientChanged', client);
+        clientEmitter.emit('clientChanged', client, discordGuild);
         res.status(200).json({ message: data });
     } catch (error) {
         console.error(error);

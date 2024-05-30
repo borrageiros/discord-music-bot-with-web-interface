@@ -1,6 +1,5 @@
 const router = require('express').Router();
 const { client, clientEmitter } = require('../../app');
-const { QueryType } = require('discord-player');
 
 
 console.log("+ Searcher command-route loaded");
@@ -13,8 +12,13 @@ console.log("+ Searcher command-route loaded");
 // appleMusicSearch
 
 router.post('/', async (req, res) => {
+    const discordGuild = req.body.discordGuild;
     const query = req.body.query;
     const engine = req.body.engine;
+
+    if (!discordGuild) {
+        return res.status(400).json({ error: 'No discordGuild provided' });
+    }
     
     if (!query) {
         return res.status(400).json({ error: 'No query provided' });
@@ -23,13 +27,13 @@ router.post('/', async (req, res) => {
     const allowedEngines = ['youtube', 'spotifySearch', 'soundcloudSearch', 'appleMusicSearch'];
 
     if (!engine || !allowedEngines.includes(engine)) {
-        return res.status(400).json({ error: 'Engine is not valid: [youtube, spotifySearch, soundcloudSearch, appleMusicSearch]' });
+        return res.status(400).json({ error: 'Engine is not valid or provided: [youtube, spotifySearch, soundcloudSearch, appleMusicSearch]' });
     }
 
     try{
         const results = await client.player.search(query, { searchEngine: engine ? engine : "" });
 
-        clientEmitter.emit('clientChanged', client);
+        clientEmitter.emit('clientChanged', client, discordGuild);
         res.status(200).json({ message: results.tracks ? results.tracks : [] });
     } catch (error) {
         console.error(error);

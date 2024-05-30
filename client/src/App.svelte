@@ -37,6 +37,7 @@
 
     socket.on("connect", (data) => {
       console.log("WebSocket connected");
+      socket.emit('joinDiscordGuild', { discordGuild: guild && guild });
     });
 
     socket.on("updateVariable", (data) => {

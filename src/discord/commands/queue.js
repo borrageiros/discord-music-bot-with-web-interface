@@ -20,8 +20,8 @@ module.exports = {
             const botMember = interaction.guild.members.cache.get(client.user.id);
             const botName = botMember ? botMember.displayName : client.user.username;
 
-            const currentTrack = client.queue && client.queue.currentTrack && client.queue.currentTrack;
-            const tracks = client.queue && client.queue.tracks && client.queue.tracks.toArray();
+            const currentTrack = client.queues[interaction.guildId] && client.queues[interaction.guildId].currentTrack && client.queues[interaction.guildId].currentTrack;
+            const tracks = client.queues[interaction.guildId] && client.queues[interaction.guildId].tracks && client.queues[interaction.guildId].tracks.toArray();
             const fullQueue = [currentTrack, ...tracks];
 
             let embed = new EmbedBuilder();

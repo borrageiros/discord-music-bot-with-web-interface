@@ -4,23 +4,31 @@ const { client, clientEmitter } = require('../../app');
 console.log("+ Set-volume command-route loaded");
 
 router.post('/', async (req, res) => {
+    const discordGuild = req.body.discordGuild;
     const volume = req.body.volume;
+
+    if (!discordGuild) {
+        return res.status(400).json({ error: 'No discordGuild provided' });
+    }
     
     if (!volume) {
         return res.status(400).json({ error: 'No volume provided' });
     }
+
+    if (!client.queues[discordGuild]) {
+        return res.status(400).json({ error: 'There is no player on the provided discordGuild' });
+    }
     
     try{
-        // Convert string to number if necessary
         if (isNaN(volume)) {
-            client.queue.filters.volume.setVolume(volume);
+            client.queues[discordGuild].filters.volume.setVolume(volume);
             client.defaultVolume = query;
         }else{
-            client.queue.filters.volume.setVolume(parseInt(volume));
+            client.queues[discordGuild].filters.volume.setVolume(parseInt(volume));
             client.defaultVolume = parseInt(volume);
         }
         
-        clientEmitter.emit('clientChanged', client);
+        clientEmitter.emit('clientChanged', client, discordGuild);
         res.status(200).json({ volume: volume });
     } catch (error) {
         console.error(error);

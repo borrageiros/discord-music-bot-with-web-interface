@@ -1,13 +1,19 @@
 const router = require('express').Router();
 const { QueryType, Track } = require('discord-player');
 const { client, clientEmitter } = require('../../app');
+const { GuildQueue } = require('discord-player');
 
 console.log("+ Play command-route loaded");
 
 router.post('/', async (req, res) => {
+    const discordGuild = req.body.discordGuild;
     const url = req.body.url;
     const voiceChannelId = req.body.voiceChannelId;
     
+    if (!discordGuild) {
+        return res.status(400).json({ error: 'No discordGuild provided' });
+    }
+
     if (!url) {
         return res.status(400).json({ error: 'No URL provided' });
     }
@@ -15,9 +21,13 @@ router.post('/', async (req, res) => {
     if (!voiceChannelId) {
         return res.status(400).json({ error: 'No voiceChannelId provided' });
     }
+
+    if (!client.queues[discordGuild]) {
+        client.queues[discordGuild] = new GuildQueue(client.player, {});
+    }
     
     try {
-        if (!client.queue.connection) await client.queue.connect(voiceChannelId);
+        if (!client.queues[discordGuild].connection) await client.queues[discordGuild].connect(voiceChannelId);
     } catch {
         console.log("Something went wrong: I can´t contect to the voice channel... try again")
         return
@@ -27,12 +37,12 @@ router.post('/', async (req, res) => {
         const searcher = await client.player.search(url, {searchEngine: QueryType.AUTO});
         const track = new Track(client.player, searcher.tracks[0]);
         
-        client.queue.addTrack( track );
+        client.queues[discordGuild].addTrack( track );
         
-        if (!client.queue.isPlaying()) await client.queue.node.play();
-        client.queue.filters.volume.setVolume(client.defaultVolume);
+        if (!client.queues[discordGuild].isPlaying()) await client.queues[discordGuild].node.play();
+        client.queues[discordGuild].filters.volume.setVolume(client.defaultVolume);
         
-        clientEmitter.emit('clientChanged', client);
+        clientEmitter.emit('clientChanged', client, discordGuild);
         res.status(200).json({ message: track });
     } catch (error) {
         console.error(error);
