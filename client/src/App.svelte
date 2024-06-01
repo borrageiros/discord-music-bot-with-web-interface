@@ -8,6 +8,7 @@
   import { onMount } from "svelte";
   import { getAppStatus } from "./api";
   import Notifications from "./lib/Notification.svelte";
+  import { setLocalStorage } from "./localStorage";
 
   let phoneQueueVisible = false; // In phone web version, define if the visible component is <Searcher> or <Queue>
 
@@ -37,11 +38,16 @@
 
     socket.on("connect", (data) => {
       console.log("WebSocket connected");
-      socket.emit('joinDiscordGuild', { discordGuild: guild && guild });
+      socket.emit("joinDiscordGuild", { discordGuild: guild && guild });
     });
 
     socket.on("updateVariable", (data) => {
       appStatus = { ...appStatus, ...data };
+
+      const selectedChannel = appStatus.channel;
+      if (guild && selectedChannel) {
+        setLocalStorage(guild, "channel", selectedChannel);
+      }
     });
 
     socket.on("disconnect", () => {
