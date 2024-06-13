@@ -16,8 +16,12 @@
     let selectedEngine = 'youtube';
 
     onMount(async () => {
-        randomSearch()
+        randomSearch();
     });
+
+    async function handleSuccessfullyAddTrack() {
+        searchQuery = '';
+    }
 
     async function search() {
         if (searchQuery.trim() !== '') {
@@ -124,6 +128,7 @@
                         arrayPosition={index}
                         isLastItem={ index === results.length - 1 }
                         on:remove={() => removeSong(track.id)}
+                        handleSuccessfullyAddTrack={handleSuccessfullyAddTrack}
                     />
                 {/each}
             {/key}

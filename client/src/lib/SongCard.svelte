@@ -18,6 +18,7 @@
   import TrashCanSvg from "/icons/trash-can.svg";
   import PlaySvg from "/icons/play.svg";
   import Loader from "./LoaderSvg.svelte";
+  export let handleSuccessfullyAddTrack = null;
   let isLoading;
 
   import {
@@ -62,6 +63,9 @@
       if (window.innerWidth <= 1024) {
         // Show notification for phones or tablets
         showNotification("Song added", "success");
+      }
+      if ( handleSuccessfullyAddTrack ) {
+        handleSuccessfullyAddTrack();
       }
     } else {
       showNotification("You must select a channel first", "error", 3);

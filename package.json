@@ -9,9 +9,9 @@
     "prestart": "test -d interface || yarn build:client",
     "start": "node src/index.js",
     "build:client": "cd client && yarn build",
-    "dev:client": "concurrently \"yarn dev\" \"yarn dev:only:client\"",
-    "dev:only:client": "cd client && yarn dev",
-    "dev:server": "nodemon src/index.js"
+    "dev": "concurrently \"yarn dev:server\" \"yarn dev:client\"",
+    "dev:client": "cd client && yarn dev",
+    "dev:server": "nodemon"
   },
   "dependencies": {
     "@discord-player/extractor": "^4.4.6",

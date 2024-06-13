@@ -35,15 +35,22 @@ router.post('/', async (req, res) => {
     
     try {
         const searcher = await client.player.search(url, {searchEngine: QueryType.AUTO});
-        const track = new Track(client.player, searcher.tracks[0]);
-        
-        client.queues[discordGuild].addTrack( track );
-        
+
+        if ( searcher.playlist ) {
+            searcher.tracks.forEach(function(song) {
+                const track = new Track(client.player, song);
+                client.queues[discordGuild].addTrack( track );
+            });
+        } else {
+            const track = new Track(client.player, searcher.tracks[0]);
+            client.queues[discordGuild].addTrack( track );
+        }
+
         if (!client.queues[discordGuild].isPlaying()) await client.queues[discordGuild].node.play();
         client.queues[discordGuild].filters.volume.setVolume(client.defaultVolume);
         
         clientEmitter.emit('clientChanged', client, discordGuild);
-        res.status(200).json({ message: track });
+        res.status(200).json({ message: searcher });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: `Something went wrong: ${error.message}` });
