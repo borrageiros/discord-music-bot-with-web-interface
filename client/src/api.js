@@ -339,3 +339,29 @@ export async function deleteTrack(trackUrl) {
     }
 }
 // --------------------------------------------------------------
+
+
+
+// --------------------------------------------------------------
+export async function deleteQueue() {
+    try {
+        const response = await fetch(url+"/delete-queue", {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                discordGuild: guild
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        throw error;
+    }
+}
+// --------------------------------------------------------------

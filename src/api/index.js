@@ -1,21 +1,22 @@
 const express = require('express');
 const router = require('express').Router();
-const play = require('./commands/play.route');
-const pause = require('./commands/pause.route');
-const resume = require('./commands/resume.route');
-const connect = require('./commands/connect.route');
-const skip = require('./commands/skip.route');
-const seek = require('./commands/seek.route');
-const toggleShuffle = require('./commands/toggle-shuffle.route');
-const toggleRepeat = require('./commands/toggle-repeat.route');
-const getAppStatus = require('./commands/get-app-status.route');
-const getQueue = require('./commands/get-queue.route');
-const setVolume = require('./commands/set-volume.route');
-const getChannels = require('./commands/get-channels.route');
-const searcher = require('./commands/searcher.route');
-const deleteTrack = require('./commands/delete-track.route');
-const getCurrentTrack = require('./commands/get-current-track.route');
-const moveTrack = require('./commands/move-track.route');
+const play = require('./routes/play.route');
+const pause = require('./routes/pause.route');
+const resume = require('./routes/resume.route');
+const connect = require('./routes/connect.route');
+const skip = require('./routes/skip.route');
+const seek = require('./routes/seek.route');
+const toggleShuffle = require('./routes/toggle-shuffle.route');
+const toggleRepeat = require('./routes/toggle-repeat.route');
+const getAppStatus = require('./routes/get-app-status.route');
+const getQueue = require('./routes/get-queue.route');
+const setVolume = require('./routes/set-volume.route');
+const getChannels = require('./routes/get-channels.route');
+const searcher = require('./routes/searcher.route');
+const deleteTrack = require('./routes/delete-track.route');
+const deleteQueue = require('./routes/delete-queue.route');
+const getCurrentTrack = require('./routes/get-current-track.route');
+const moveTrack = require('./routes/move-track.route');
 
 router.use("/", express.static('interface', { 'Content-Type': 'application/javascript' }));
 
@@ -37,6 +38,7 @@ router.get('/docs', (req, res) => {
       getChannels: '/api/get-channels/:guildId',
       searcher: '/api/searcher',
       deleteTrack: '/api/delete-track',
+      deleteQueue: '/api/delete-queue',
       getCurrentTrack: '/api/get-current-track'
     }
   });
@@ -57,6 +59,7 @@ router.use('/api/set-volume', setVolume);
 router.use('/api/get-queue', getQueue);
 router.use('/api/searcher', searcher);
 router.use('/api/delete-track', deleteTrack);
+router.use('/api/delete-queue', deleteQueue);
 router.use('/api/get-current-track', getCurrentTrack);
 router.use('/api/move-track', moveTrack);
 

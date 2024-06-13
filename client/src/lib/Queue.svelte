@@ -1,17 +1,30 @@
 <script>
     import SongCard from './SongCard.svelte';
-    import PlaySvg from '/icons/play.svg'
-    import { playSong } from '../api';
+    import PlaySvg from '/icons/play.svg';
+    import TrashCanSvg from '/icons/trash-can.svg';
+    import { playSong, deleteQueue } from '../api';
     import MenuButton from './ToggleMenuButton.svelte';
+    import Loader from './LoaderSvg.svelte';
 
     export let phoneQueueVisible = false;
     export let appStatus;
 
     let searchQuery = '';
-    
+    let loading = false;
+
     async function sendLink() {
-        await playSong(searchQuery, appStatus.channel && appStatus.channel );
+        loading = true;
+        await playSong(searchQuery, appStatus.channel && appStatus.channel);
+        searchQuery = '';
+        loading = false;
     }
+
+    async function handleDeleteQueue() {
+        loading = true;
+        await deleteQueue();
+        loading = false;
+    }
+
     function handleKeyDown(event) {
         if (event.key === 'Enter') {
             sendLink();
@@ -21,7 +34,17 @@
 
 <div class="queue-container">
     <div class="queue sticky-searcher">
-        <img class="queue-logo" src={PlaySvg} alt="">
+        {#if loading}
+            <div class="loader-svg">
+                <Loader />
+            </div>
+        {:else}
+            {#if appStatus && appStatus.tracks && appStatus.tracks.length > 1}
+                <img class="queue-trash-can" src={TrashCanSvg} alt="delete-queue" on:click={handleDeleteQueue} on:keydown={handleDeleteQueue}>
+            {:else}
+                <img class="queue-logo" src={PlaySvg} alt="">
+            {/if}
+        {/if}
         <input 
             class="queue-input" 
             type="text" 
@@ -52,13 +75,13 @@
 </div>
 
 <style>
-    .queue-container{
+    .queue-container {
         height: 100%;
         background-color: black;
         overflow: scroll;
         overflow-x: hidden;
     }
-    .queue{
+    .queue {
         min-height: 9vh;
         border-bottom: solid 2px #242424;
         display: flex;
@@ -74,18 +97,21 @@
         display: flex;
         align-items: center;
     }
-    .queue-logo{
+    .queue-trash-can, .queue-logo, .loader-svg {
         margin: 2vh;
         height: 5vh;
     }
-    .queue-input{
+    .queue-trash-can {
+        cursor: pointer;
+    }
+    .queue-input {
         width: 80%;
         margin-right: 1vh;
         height: 3vh;
         padding: 2vh;
     }
-    @media (max-width: 1024px) {    
-        .queue-input{
+    @media (max-width: 1024px) {
+        .queue-input {
             width: 55%;
         }
     }
