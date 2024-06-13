@@ -132,9 +132,10 @@ docker run -d \
     "prestart": "test -d interface || yarn build:client",
     "start": "node src/index.js",
     "build:client": "cd client && yarn build",
+    "dev": "concurrently \"yarn dev:server\" \"yarn dev:client\"",
     "dev:client": "cd client && yarn dev",
-    "dev:server": "nodemon src/index.js"
-}
+    "dev:server": "nodemon"
+  }
 ```  
 
 - Enviorment variables for dev:  
