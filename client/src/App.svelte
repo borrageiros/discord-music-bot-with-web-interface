@@ -47,6 +47,10 @@
     socket.on("updateVariable", (data) => {
       appStatus = { ...appStatus, ...data };
 
+      if (appStatus.botNickname) {
+        document.title = appStatus.botNickname;
+      }
+
       const selectedChannel = appStatus.channel;
       if (guild && selectedChannel) {
         setLocalStorage(guild, "channel", selectedChannel);
