@@ -66,29 +66,22 @@
     >
       <Notifications />
 
-      <div class="left-side">
+      <div class="left-side" style={appStatus.tracks[0] ? "width: 67%;" : "width: 100%;"}>
         {#if !phoneQueueVisible}
-          <Searcher bind:phoneQueueVisible />
+          <Searcher {appStatus} bind:phoneQueueVisible />
         {:else if phoneQueueVisible}
           <div class="queue">
             <Queue {appStatus} bind:phoneQueueVisible />
           </div>
-          <div class="channel-chooser">
-            <ChannelChooser {appStatus} />
-          </div>
         {/if}
       </div>
 
-      <div class="right-side">
-        {#if !phoneQueueVisible}
+      <div class="right-side" style={appStatus.tracks[0] ? "width: 33%;" : "width: 0%;"}>
+        {#if !phoneQueueVisible && appStatus.tracks[0]}
           <div class="queue">
             <Queue {appStatus} />
           </div>
         {/if}
-
-        <div class="channel-chooser">
-          <ChannelChooser {appStatus} />
-        </div>
       </div>
     </div>
 
@@ -108,27 +101,21 @@
     display: flex;
     justify-content: space-around;
   }
-  .windows > div {
-    margin: 1vh;
-  }
   .left-side {
     height: 100%;
-    width: 67%;
   }
   .right-side {
-    width: 33%;
+    
     height: 100%;
   }
   .queue {
-    height: 80%;
+    height: 100%;
     margin-bottom: 1vh;
-  }
-  .channel-chooser {
-    height: 19%;
+    border-radius: 25px;
   }
   @media (max-width: 1024px) {
     .left-side {
-      width: 100%;
+      width: 100% !important;
     }
     .right-side {
       display: none;

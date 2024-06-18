@@ -2,38 +2,26 @@
     import SongCard from './SongCard.svelte';
     import PlaySvg from '/icons/play.svg';
     import TrashCanSvg from '/icons/trash-can.svg';
-    import { playSong, deleteQueue } from '../api';
+    import { deleteQueue } from '../api';
     import MenuButton from './ToggleMenuButton.svelte';
     import Loader from './LoaderSvg.svelte';
+    import ChannelChooser from './ChannelChooser.svelte';
 
     export let phoneQueueVisible = false;
     export let appStatus;
 
-    let searchQuery = '';
     let loading = false;
-
-    async function sendLink() {
-        loading = true;
-        await playSong(searchQuery, appStatus.channel && appStatus.channel);
-        searchQuery = '';
-        loading = false;
-    }
 
     async function handleDeleteQueue() {
         loading = true;
         await deleteQueue();
         loading = false;
     }
-
-    function handleKeyDown(event) {
-        if (event.key === 'Enter') {
-            sendLink();
-        }
-    }
 </script>
 
 <div class="queue-container">
     <div class="queue sticky-searcher">
+        <ChannelChooser {appStatus} />
         {#if loading}
             <div class="loader-svg">
                 <Loader />
@@ -45,13 +33,6 @@
                 <img class="queue-logo" src={PlaySvg} alt="">
             {/if}
         {/if}
-        <input 
-            class="queue-input" 
-            type="text" 
-            bind:value={searchQuery}
-            on:keydown={handleKeyDown}
-            placeholder="Add link to queue..."
-        >
         <MenuButton bind:phoneQueueVisible={phoneQueueVisible} />
     </div>
     <div class="queue-results">
@@ -80,6 +61,18 @@
         background-color: black;
         overflow: scroll;
         overflow-x: hidden;
+        border-radius: 25px;
+        margin: 1vh;
+        -ms-overflow-style: none;  /* Internet Explorer, Edge */
+        scrollbar-width: none; /* Internet Explorer, Edge */
+    }
+    .queue-container::-webkit-scrollbar {
+        display: none;  /* Chrome, Safari, Opera */
+    }
+    .queue-results{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
     .queue {
         min-height: 9vh;
@@ -103,16 +96,5 @@
     }
     .queue-trash-can {
         cursor: pointer;
-    }
-    .queue-input {
-        width: 80%;
-        margin-right: 1vh;
-        height: 3vh;
-        padding: 2vh;
-    }
-    @media (max-width: 1024px) {
-        .queue-input {
-            width: 55%;
-        }
     }
 </style>

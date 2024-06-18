@@ -1,6 +1,6 @@
 <script>
     import { onMount } from 'svelte';
-    import { searcher } from '../api';
+    import { searcher, playSong } from '../api';
     import SongCard from './SongCard.svelte';
     import YoutubeSvg from '/icons/youtube.svg';
     import SpotifySvg from '/icons/spotify.svg';
@@ -8,26 +8,55 @@
     import AppleMusicSvg from '/icons/applemusic.svg';
     import MenuButton from './ToggleMenuButton.svelte';
     import Loader from './LoaderSvg.svelte';
+    import ChannelChooser from './ChannelChooser.svelte';
+    import { showNotification } from './NotificationStore';
 
+    export let appStatus;
     export let phoneQueueVisible;
 
     let searchQuery = '';
     let results = [];
     let selectedEngine = 'youtube';
+    let loading = false;
 
     onMount(async () => {
         randomSearch();
     });
+
+    function validURL(str) {
+        var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+            '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+            '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+            '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+        return !!pattern.test(str);
+    }
 
     async function handleSuccessfullyAddTrack() {
         searchQuery = '';
     }
 
     async function search() {
+        loading = true;
         if (searchQuery.trim() !== '') {
             const response = await searcher( searchQuery, selectedEngine );
             results = [...response.message];
         }
+        loading = false;
+    }
+
+    async function sendLink() {
+        loading = true;
+        try {
+            await playSong(searchQuery, appStatus.channel && appStatus.channel);
+        } catch (error) {
+            showNotification("Not valid link", "error");
+            searchQuery = '';
+            loading = false;
+        }
+        searchQuery = '';
+        loading = false;
     }
 
     async function randomSearch() {
@@ -40,7 +69,11 @@
 
     function handleKeyDownSearch(event) {
         if (event.key === 'Enter') {
-            search();
+            if (validURL(searchQuery)) {
+                sendLink();
+            } else {
+                search();
+            }
         }
     }
 
@@ -50,7 +83,7 @@
 
     function selectImage(imageName) {
         selectedEngine = imageName;
-        if ( searchQuery.length ){
+        if ( searchQuery.length && !validURL(searchQuery)){
             search();
         }else {
             randomSearch();
@@ -107,10 +140,13 @@
             'Search...'
             }
         >
+        {#if !appStatus.tracks[0]}
+            <ChannelChooser {appStatus} />
+        {/if}
     </div>
-    <div class="searcher-results" class:loading={results.length === 0}>
-        {#if results.length === 0}
-            <div class="loader">
+    <div class="searcher-results" class:loading={results.length === 0 || loading}>
+        {#if results.length === 0 || loading}
+            <div class="loader" >
                 <Loader />
             </div>
         {:else}
@@ -141,7 +177,13 @@
         height: 100%;
         background-color: black;
         overflow: scroll;
-        overflow-x: hidden;
+        border-radius: 25px;
+        margin: 1vh;
+        -ms-overflow-style: none;  /* Internet Explorer, Edge */
+        scrollbar-width: none; /* Internet Explorer, Edge */
+    }
+    .searcher-container::-webkit-scrollbar {
+        display: none;  /* Chrome, Safari, Opera */
     }
     .sticky-searcher {
         position: sticky;
@@ -150,6 +192,11 @@
         background-color: black;
         border-bottom: solid 2px #242424;
         display: flex;
+        align-items: center;
+    }
+    .searcher-results{
+        display: flex;
+        flex-direction: column;
         align-items: center;
     }
     .searcher-results.loading {
@@ -184,6 +231,8 @@
         margin-right: 1vh;
         height: 3vh;
         padding: 2vh;
+        border-radius: 25px;
+        background-color: #242424;
     }
     @media (max-width: 1024px) {        
         .searcher {
