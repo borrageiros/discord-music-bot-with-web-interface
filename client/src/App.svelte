@@ -24,6 +24,9 @@
   onMount(async () => {
     try {
       const initialStatus = await getAppStatus();
+      if (initialStatus.botNickname) {
+        document.title = "🛸 "+initialStatus.botNickname;
+      }
       appStatus = { ...appStatus, ...initialStatus };
     } catch (error) {
       console.error("Error fetching app status:", error);
@@ -35,6 +38,7 @@
     guild = params.get("guild");
 
     socket = io(currentUrl.split("?")[0]);
+    // socket = io("http://localhost:3000/");
 
     socket.on("connect", (data) => {
       console.log("WebSocket connected");

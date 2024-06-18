@@ -15,6 +15,10 @@ router.get('/:discordGuild', async (req, res) => {
     }
 
     try{
+        const guild = client.guilds.cache.get(discordGuild);
+        const botMember = guild ? guild.members.cache.get(client.user.id) : null;
+        const botNickname = botMember ? botMember.nickname : null;
+
         const currentTrack = client.queues[discordGuild].currentTrack;
         const progressBar = client.queues[discordGuild].node.createProgressBar({separator: "", indicator: "", length: 1});
         const times = progressBar && progressBar.split(" ");
@@ -58,7 +62,8 @@ router.get('/:discordGuild', async (req, res) => {
                 isPlaying,
                 channel: connectedChannel ? connectedChannel.id : null,
                 shuffle: isShuffling,
-                repeat: isRepeating
+                repeat: isRepeating,
+                botNickname: botNickname ? botNickname : null
             });
     } catch (error) {
         console.error(error);

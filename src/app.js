@@ -146,6 +146,11 @@ io.on('connection', (socket) => {
 
   // Generate the appStatus for the socket clients
   const sendUpdate = (updatedClient, discordGuild) => {
+
+    const guild = client.guilds.cache.get(discordGuild);
+    const botMember = guild ? guild.members.cache.get(client.user.id) : null;
+    const botNickname = botMember ? botMember.nickname : null;
+
     if (client.queues[discordGuild]) {
       const currentTrack = client.queues[discordGuild].currentTrack;
       const progressBar = client.queues[discordGuild].node.createProgressBar({ separator: "", indicator: "", length: 1 });
@@ -188,7 +193,8 @@ io.on('connection', (socket) => {
         isPlaying,
         channel: connectedChannel ? connectedChannel.id : null,
         shuffle: isShuffling,
-        repeat: isRepeating
+        repeat: isRepeating,
+        botNickname: botNickname
       });
     } else {
       socket.to(discordGuild).emit('updateVariable', {
@@ -198,7 +204,8 @@ io.on('connection', (socket) => {
         isPlaying: null,
         channel: null,
         shuffle: null,
-        repeat: null
+        repeat: null,
+        botNickname: botNickname ? botNickname : null
       });
     }
   };

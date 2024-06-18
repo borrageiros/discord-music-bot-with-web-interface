@@ -1,6 +1,7 @@
 const currentUrl = window.location.href;
 const urlObject = new URL(currentUrl);
 const url = urlObject.origin + "/api";
+// const url = "http://localhost:3000/api"
 const params = new URLSearchParams(urlObject.search);
 const guild = params.get('guild');
 
