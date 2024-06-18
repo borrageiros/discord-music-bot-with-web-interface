@@ -3,7 +3,6 @@
   import Player from "./lib/Player.svelte";
   import Searcher from "./lib/Searcher.svelte";
   import Queue from "./lib/Queue.svelte";
-  import ChannelChooser from "./lib/ChannelChooser.svelte";
   import GuildChooser from "./lib/GuildChooser.svelte";
   import { onMount } from "svelte";
   import { getAppStatus } from "./api";
@@ -25,7 +24,7 @@
     try {
       const initialStatus = await getAppStatus();
       if (initialStatus.botNickname) {
-        document.title = "🛸 "+initialStatus.botNickname;
+        document.title = initialStatus.botNickname;
       }
       appStatus = { ...appStatus, ...initialStatus };
     } catch (error) {
