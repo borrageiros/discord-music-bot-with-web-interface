@@ -47,7 +47,7 @@ for (const file of commandFiles) {
 }
 
 client.on("ready", () => {
-  console.log(`🟢  Logged to discord with name: ${client.user.username}`);
+  console.log(`🟣  Logged to discord with name: ${client.user.username}`);
   client.user.setPresence({
     activities: [{
       name: process.env.ACTIVITY || "music",

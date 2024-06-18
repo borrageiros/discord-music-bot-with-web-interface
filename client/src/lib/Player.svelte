@@ -241,18 +241,15 @@
 
 <style>
   .player {
-    width: 99%;
+    width: 100%;
     height: 15vh;
     background-color: black;
-    margin: 1vh;
     position: fixed;
     bottom: 0;
-    display:
-    flex;
+    display: flex;
     flex-direction: row;
     justify-content: space-around;
   }
-
   .track-info {
     width: 20%;
     height: 100%;
@@ -366,9 +363,6 @@
   }
 
   @media (max-width: 1024px) {
-    .player {
-      width: 96.5%;
-    }
     .controls-container{
       width: 100%;
     }

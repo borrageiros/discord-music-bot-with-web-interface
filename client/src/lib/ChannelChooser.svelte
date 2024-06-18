@@ -65,6 +65,7 @@
     height: 100%;
     background-color: black;
     overflow: hidden;
+    margin-bottom: 10px;
   }
   .channel-chooser-container select {
     width: 100%;

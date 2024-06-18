@@ -29,8 +29,7 @@ router.post('/', async (req, res) => {
     try {
         if (!client.queues[discordGuild].connection) await client.queues[discordGuild].connect(voiceChannelId);
     } catch {
-        console.log("Something went wrong: I can´t contect to the voice channel... try again")
-        return
+        return res.status(500).json({ error: 'Something went wrong: I cant contect to the voice channel... try again' });
     }
     
     try {

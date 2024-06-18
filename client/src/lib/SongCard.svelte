@@ -187,13 +187,15 @@
 <style>
   .track-card {
     border: solid 2px #242424;
-    width: 100%;
+    width: 98%;
     height: 15vh;
     display: flex;
     align-items: center;
     justify-content: space-between;
     text-align: left;
     padding: 1vh;
+    border-radius: 25px;
+    margin: 10px;
   }
   .track-info-container {
     display: flex;
