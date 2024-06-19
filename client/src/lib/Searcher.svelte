@@ -227,6 +227,7 @@
         padding: 5px;
     }
     .searcher-input{
+        color: white;
         width: 70%;
         margin-right: 1vh;
         height: 3vh;

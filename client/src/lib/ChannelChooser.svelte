@@ -6,7 +6,7 @@
   import { showNotification } from "./NotificationStore";
 
   let channels = [];
-  let selectedChannel;
+  let selectedChannel = "";
   let guild;
 
   $: if (appStatus && appStatus.channel) {
@@ -28,16 +28,11 @@
       window.location.href = currentUrl.split("?")[0];
     }
 
-    let channelInStorage;
     if (guild) {
-      channelInStorage = await getLocalStorage(guild, "channel");
-    }
-    if (
-      channelInStorage &&
-      selectedChannel !== undefined &&
-      selectedChannel !== ""
-    ) {
-      selectedChannel = channelInStorage;
+      const channelInStorage = await getLocalStorage(guild, "channel");
+      if (channelInStorage && selectedChannel === "") {
+        selectedChannel = channelInStorage;
+      }
     }
   });
 
@@ -52,8 +47,8 @@
 </script>
 
 <div class="channel-chooser-container">
-  <select bind:value={selectedChannel} on:change={handleChannelSelection}>
-    <option disabled selected value="">Select a channel</option>
+  <select value={selectedChannel} on:change={handleChannelSelection}>
+    <option disabled value="">Select a channel</option>
     {#each channels as channel}
       <option value={channel.id}>{channel.name}</option>
     {/each}
@@ -75,5 +70,8 @@
     color: white;
     text-align: center;
     font-size: 1.5em;
+  }
+  .channel-chooser-container select:focus {
+    outline: none;
   }
 </style>

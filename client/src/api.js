@@ -34,27 +34,27 @@ export async function playSong(trackUrl, voiceChannel) {
 
 // --------------------------------------------------------------
 export async function connect(voiceChannel) {
-        try {
-            const response = await fetch(url+"/connect", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    discordGuild: guild,
-                    voiceChannelId: voiceChannel
-                })
-            });
-            
-            if (!response.ok) {
-                throw new Error(`Error HTTP: ${response.status}`);
-            }
-    
-            return await response.json();
-        } catch (error) {
-            throw error;
+    try {
+        const response = await fetch(url+"/connect", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                discordGuild: guild,
+                voiceChannelId: voiceChannel
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
         }
+
+        return await response.json();
+    } catch (error) {
+        throw error;
     }
+}
 // --------------------------------------------------------------
 
 
