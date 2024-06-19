@@ -1,11 +1,13 @@
 <script>
     import SongCard from './SongCard.svelte';
-    import PlaySvg from '/icons/play.svg';
-    import TrashCanSvg from '/icons/trash-can.svg';
     import { deleteQueue } from '../api';
     import MenuButton from './ToggleMenuButton.svelte';
-    import Loader from './LoaderSvg.svelte';
     import ChannelChooser from './ChannelChooser.svelte';
+
+    import Icon from './Icon.svelte';
+    // @ts-ignore
+    import { FaSolidTrashCan } from "svelte-icons-pack/fa";
+    import Loader from './LoaderSvg.svelte';
 
     export let phoneQueueVisible = false;
     export let appStatus;
@@ -28,9 +30,7 @@
             </div>
         {:else}
             {#if appStatus && appStatus.tracks && appStatus.tracks.length > 1}
-                <img class="queue-trash-can" src={TrashCanSvg} alt="delete-queue" on:click={handleDeleteQueue} on:keydown={handleDeleteQueue}>
-            {:else}
-                <img class="queue-logo" src={PlaySvg} alt="">
+                <Icon src={FaSolidTrashCan} size={"5vh"} onClick={handleDeleteQueue} color={"red"} />
             {/if}
         {/if}
         <MenuButton bind:phoneQueueVisible={phoneQueueVisible} />
@@ -90,11 +90,8 @@
         display: flex;
         align-items: center;
     }
-    .queue-trash-can, .queue-logo, .loader-svg {
+    .loader-svg {
         margin: 2vh;
         height: 5vh;
-    }
-    .queue-trash-can {
-        cursor: pointer;
     }
 </style>

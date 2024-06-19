@@ -2,22 +2,13 @@
   import { showNotification } from './NotificationStore';
   import { onDestroy } from 'svelte';
   import { setVolume, pause, resume, skip, getAppStatus, toggleShuffle, toggleRepeat, seek } from '../api';
+  import Icon from './Icon.svelte';
+  import Loader from './LoaderSvg.svelte';
+
+  // @ts-ignore
+  import { FaSolidPlay, FaSolidPause, FaSolidForwardStep, FaSolidBackwardStep, FaSolidShuffle, FaSolidRepeat, FaSolidVolumeHigh, FaSolidVolumeXmark } from "svelte-icons-pack/fa";
 
   export let appStatus;
-
-  // ASSETS SVG
-  import playSvg from '/icons/play.svg';
-  import pauseSvg from '/icons/pause.svg';
-  import forwardStepSvg from '/icons/forward-step.svg';
-  import backwardStepSvg from '/icons/backward-step.svg';
-  import repeatSvg from '/icons/repeat.svg';
-  import repeatOnSvg from '/icons/repeat-on.svg';
-  import shuffleSvg from '/icons/shuffle.svg';
-  import shuffleOnSvg from '/icons/shuffle-on.svg';
-  import volumeOn from '/icons/volume-on.svg';
-  import volumeOff from '/icons/volume-off.svg';
-  import Loader from './LoaderSvg.svelte';
-  // ASSETS SVG
 
   let volume = appStatus.volume;
   let userIsInteracting = false;
@@ -120,7 +111,7 @@
   }
 
   async function handleBackward() {
-    showNotification("Not implemented", "error");
+    showNotification("Not implemented", "success");
   }
 
   async function handleSkip() {
@@ -161,31 +152,31 @@
 
     <div class="controls">
       {#if appStatus.shuffle}
-        <img class="shuffle-on-svg" src={shuffleOnSvg} alt="shuffle-on" on:click={handleShuffle} on:keydown={handleShuffle} >
+        <Icon src={FaSolidShuffle} size={"3vh"} onClick={handleShuffle} color={"red"} />
       {:else}
-        <img class="shuffle-svg" src={shuffleSvg} alt="shuffle" on:click={handleShuffle} on:keydown={handleShuffle} >
+        <Icon src={FaSolidShuffle} size={"3vh"} onClick={handleShuffle} color={"yellowgreen"} />
       {/if}
       
-      <img class="backward-step-svg" src={backwardStepSvg} alt="backward-step" on:click={handleBackward} on:keydown={handleBackward}>
+      <Icon src={FaSolidBackwardStep} size={"3vh"} onClick={handleBackward} color={"yellowgreen"} />
 
       {#if appStatus.isPlaying}
-        <img class="pause-svg" src={pauseSvg} alt="pause" on:click={handlePause} on:keydown={handlePause}>
+        <Icon src={FaSolidPause} size={"6vh"} onClick={handlePause} color={"yellowgreen"} />
       {:else}
-        <img class="play-svg" src={playSvg} alt="play" on:click={handleResume} on:keydown={handleResume}>
+        <Icon src={FaSolidPlay} size={"6vh"} onClick={handleResume} color={"yellowgreen"} />
       {/if}
 
       {#if !isSkipping}
-        <img class="forward-step-svg" src={forwardStepSvg} alt="forward-step" on:click={handleSkip} on:keydown={handleSkip}>
+        <Icon src={FaSolidForwardStep} size={"3vh"} onClick={handleSkip} color={"yellowgreen"} />
       {:else}
-        <div class="forward-step-svg">
+        <div class="loader">
           <Loader />
         </div>
       {/if}
 
       {#if appStatus.repeat === 1}
-        <img class="repeat-on-svg" src={repeatOnSvg} alt="repeat-on" on:click={handleRepeat} on:keydown={handleRepeat} >
+        <Icon src={FaSolidRepeat} size={"3vh"} onClick={handleRepeat} color={"red"} />
       {:else}
-        <img class="repeat-svg" src={repeatSvg} alt="repeat" on:click={handleRepeat} on:keydown={handleRepeat} >
+        <Icon src={FaSolidRepeat} size={"3vh"} onClick={handleRepeat} color={"yellowgreen"} />
       {/if}
 
     </div>
@@ -217,9 +208,9 @@
   <div class="volume">
     
     {#if appStatus.volume > 0}
-      <img class="volume-on-svg" src={volumeOn} alt="volume-on">
+      <Icon src={FaSolidVolumeHigh} size={"3vh"} color={"yellowgreen"} />
     {:else}
-      <img class="volume-off-svg" src={volumeOff} alt="volume-off">
+      <Icon src={FaSolidVolumeXmark} size={"3vh"} color={"yellowgreen"} />
     {/if}
     
     <div class="volume-input-container">
@@ -341,7 +332,6 @@
     appearance: none;
     width: 25px;
     height: 25px;
-    background: yellowgreen;
     cursor: pointer;
   }
 
@@ -351,14 +341,7 @@
       background: yellowgreen;
       cursor: pointer;
   }
-
-  [class*="-svg"] {
-    width: 3vh;
-    cursor: pointer;
-  }
-
-  .forward-step-svg,
-  .backward-step-svg {
+  .loader {
     width: 1.5vh;
   }
 
