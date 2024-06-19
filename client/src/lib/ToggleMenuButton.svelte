@@ -1,5 +1,8 @@
 <script>
-    import menuSvg from '/icons/menu.svg';
+    import Icon from './Icon.svelte';
+    // @ts-ignore
+    import { FaSolidBars } from "svelte-icons-pack/fa";
+
     export let phoneQueueVisible = false;
 
     function togglephoneQueueVisible() {
@@ -8,23 +11,12 @@
 </script>
 
 <div class="menu-container">
-    <img
-        class="menu-svg"
-        src={menuSvg} 
-        alt="menu-svg" 
-        on:click={togglephoneQueueVisible}
-        on:keydown={togglephoneQueueVisible}
-    />
+    <Icon src={FaSolidBars} size={"5vh"} onClick={togglephoneQueueVisible} color={"yellowgreen"} />
 </div>
 
 <style>
     .menu-container {
-        margin: 2vh;
-        height: 4vh;
-        cursor: pointer;
-    }
-    .menu-svg {
-        height: 100%;
+        margin: 1.5vh;
     }
     @media (min-width: 1025px) {
         .menu-container{

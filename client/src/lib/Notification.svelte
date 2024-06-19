@@ -1,9 +1,10 @@
 <script>
     import { fly } from 'svelte/transition';
     import { notification, clearNotification } from './NotificationStore.js';
-    import closeSvg from '/icons/x.svg';
-    import alertSvg from '/icons/alert.svg';
-    import checkSvg from '/icons/check.svg';
+
+    import Icon from './Icon.svelte';
+    // @ts-ignore
+    import { FaSolidCircleExclamation, FaSolidCircleCheck, FaSolidXmark } from "svelte-icons-pack/fa";
 
     let visible = false;
     let message = '';
@@ -16,14 +17,14 @@
 </script>
 
 {#if visible}
-<div class="notification {type}" in:fly={{ y: -200, duration: 500 }} out:fly={{ y: -200, duration: 500 }}>
+<div class="notification {type}" in:fly={{ y: -200, duration: 500 }} out:fly={{ y: -200, duration: 500 }} on:click={clearNotification} on:keydown={clearNotification}>
     {#if type === "success"}
-        <img class="check-svg" src={checkSvg} alt="check-svg" />
+        <Icon src={FaSolidCircleCheck} size={"3vh"} color={"black"} style={"margin-left: 10px"} />
     {:else if type === "error"}
-        <img class="alert-svg" src={alertSvg} alt="alert-svg" />
+        <Icon src={FaSolidCircleExclamation} size={"3vh"} color={"black"} style={"margin-left: 10px"} />
     {/if}
     <p class="message">{message}</p>
-    <img src={closeSvg} alt="close-x-svg" class="close-x-svg" on:click={clearNotification} on:keydown={clearNotification}/>
+    <Icon src={FaSolidXmark} size={"3vh"} color={"black"} onClick={clearNotification} style={"margin-left: 10px"} />
 </div>
 {/if}
 
@@ -48,14 +49,6 @@
         font-size: 1.3vw;
         flex-grow: 1;
         text-align: center;
-    }
-    .check-svg, .alert-svg, .close-x-svg {
-        width: 3vh;
-        cursor: pointer;
-        margin-left: 10px;
-    }
-    .close-x-svg:hover{
-        filter: invert(60%);
     }
     .success {
         background-color: yellowgreen;

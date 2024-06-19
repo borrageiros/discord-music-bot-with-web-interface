@@ -3,6 +3,11 @@
   import { createEventDispatcher, onMount } from "svelte";
   import { getLocalStorage } from "../localStorage";
   import { moveTrack } from "../api";
+  import Icon from "./Icon.svelte";
+  import Loader from "./LoaderSvg.svelte";
+  // @ts-ignore
+  import { FaSolidCircleArrowUp, FaSolidCircleArrowDown, FaSolidTrashCan, FaSolidPlay } from "svelte-icons-pack/fa";
+
   export let id,
     title,
     channelTitle,
@@ -13,11 +18,6 @@
     duration,
     arrayPosition,
     isLastItem;
-  import ArrowDown from "/icons/arrow-down.svg";
-  import ArrowUp from "/icons/arrow-up.svg";
-  import TrashCanSvg from "/icons/trash-can.svg";
-  import PlaySvg from "/icons/play.svg";
-  import Loader from "./LoaderSvg.svelte";
   export let handleSuccessfullyAddTrack = null;
   let isLoading;
 
@@ -129,40 +129,16 @@
     {#if !isLoading}
       <div class="move-track-controls">
         {#if arrayPosition >= 2}
-          <img
-            class="arrow-svg"
-            src={ArrowUp}
-            alt="delete"
-            on:click={handleArrowUp}
-            on:keydown={handleArrowUp}
-          />
+          <Icon src={FaSolidCircleArrowUp} size={"2.7vh"} onClick={handleArrowUp} color={"yellowgreen"} style={"padding: 5px"} />
         {/if}
         {#if arrayPosition >= 1 && !isLastItem}
-          <img
-            class="arrow-svg"
-            src={ArrowDown}
-            alt="delete"
-            on:click={handleArrowDown}
-            on:keydown={handleArrowDown}
-          />
+          <Icon src={FaSolidCircleArrowDown} size={"2.7vh"} onClick={handleArrowDown} color={"yellowgreen"} style={"padding: 5px"} />
         {/if}
       </div>
       {#if isCurrentTrack}
-        <img
-          class="trash-can-svg"
-          src={TrashCanSvg}
-          alt="delete"
-          on:click={handleSkip}
-          on:keydown={handleSkip}
-        />
+        <Icon src={FaSolidTrashCan} size={"5vh"} onClick={handleSkip} color={"red"} />
       {:else}
-        <img
-          class="trash-can-svg"
-          src={TrashCanSvg}
-          alt="delete"
-          on:click={handleDeleteTrack}
-          on:keydown={handleDeleteTrack}
-        />
+        <Icon src={FaSolidTrashCan} size={"5vh"} onClick={handleDeleteTrack} color={"red"} style={"margin-left: 10px"} />
       {/if}
     {:else}
       <div class="loader">
@@ -170,13 +146,7 @@
       </div>
     {/if}
   {:else if !isLoading}
-    <img
-      class="play-svg"
-      src={PlaySvg}
-      alt="play"
-      on:click={handlePlaySong}
-      on:keydown={handlePlaySong}
-    />
+    <Icon src={FaSolidPlay} size={"5vh"} onClick={handlePlaySong} color={"yellowgreen"} style={"margin-right: 3vw"}/>
   {:else}
     <div class="loader">
       <Loader />
@@ -187,7 +157,7 @@
 <style>
   .track-card {
     border: solid 2px #242424;
-    width: 98%;
+    width: calc(100% - 20px);
     height: 15vh;
     display: flex;
     align-items: center;
@@ -230,26 +200,11 @@
     height: 100%;
     align-self: flex-end;
   }
-  .arrow-svg,
-  .arrow-svg {
-    max-height: 3vh;
-    margin: 1vh;
-    cursor: pointer;
-  }
-  .arrow-svg:hover,
-  .arrow-svg:hover {
-    filter: grayscale(60%);
-  }
-  .play-svg,
-  .trash-can-svg {
-    height: 5vh;
-    margin: 2vh;
-    cursor: pointer;
-  }
   .loader {
     min-width: 5vh;
     max-width: 5vh;
     margin: 2vh;
+    margin-right: 3vw;
     cursor: pointer;
   }
 </style>

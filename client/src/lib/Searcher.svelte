@@ -2,12 +2,13 @@
     import { onMount } from 'svelte';
     import { searcher, playSong } from '../api';
     import SongCard from './SongCard.svelte';
-    import YoutubeSvg from '/icons/youtube.svg';
-    import SpotifySvg from '/icons/spotify.svg';
-    import SoundCloudSvg from '/icons/soundcloud.svg';
-    import AppleMusicSvg from '/icons/applemusic.svg';
-    import MenuButton from './ToggleMenuButton.svelte';
+
+    import Icon from './Icon.svelte';
+    // @ts-ignore
+    import { FaBrandsYoutube, FaBrandsSpotify, FaBrandsSoundcloud, FaBrandsApple } from "svelte-icons-pack/fa";
     import Loader from './LoaderSvg.svelte';
+
+    import MenuButton from './ToggleMenuButton.svelte';
     import ChannelChooser from './ChannelChooser.svelte';
     import { showNotification } from './NotificationStore';
 
@@ -93,37 +94,37 @@
 
 <div class="searcher-container">
     <div class="searcher sticky-searcher">
-        <img 
-            class="logo {selectedEngine === 'youtube' ? 'selected-logo' : ''}" 
-            src={YoutubeSvg} 
-            alt="youtube" 
-            on:click={() => selectImage('youtube')} 
-            on:keydown={() => selectImage('youtube')} 
-        >
+        <Icon 
+            src={FaBrandsYoutube}
+            size={selectedEngine === 'youtube' ? "4vh" : "5vh"}
+            onClick={() => selectImage('youtube')}
+            color={"red"}
+            style={selectedEngine === 'youtube' ? "border-bottom: 3px solid yellowgreen; margin: 1.5vh" : "margin: 1.5vh"}
+        />
 
-        <img 
-            class="logo {selectedEngine === 'spotifySearch' ? 'selected-logo' : ''}" 
-            src={SpotifySvg} 
-            alt="spotifySearch" 
-            on:click={() => selectImage('spotifySearch')} 
-            on:keydown={() => selectImage('spotifySearch')} 
-        >
+        <Icon 
+            src={FaBrandsSpotify}
+            size={selectedEngine === 'spotifySearch' ? "4vh" : "5vh"}
+            onClick={() => selectImage('spotifySearch')}
+            color={"yellowgreen"}
+            style={selectedEngine === 'spotifySearch' ? "border-bottom: 3px solid yellowgreen; margin: 1.5vh" : "margin: 1.5vh"}
+        />
 
-        <img 
-            class="logo {selectedEngine === 'soundcloudSearch' ? 'selected-logo' : ''}" 
-            src={SoundCloudSvg} 
-            alt="soundcloudSearch" 
-            on:click={() => selectImage('soundcloudSearch')} 
-            on:keydown={() => selectImage('soundcloudSearch')}
-        >
+        <Icon 
+            src={FaBrandsSoundcloud}
+            size={selectedEngine === 'soundcloudSearch' ? "4vh" : "5vh"}
+            onClick={() => selectImage('soundcloudSearch')}
+            color={"orange"}
+            style={selectedEngine === 'soundcloudSearch' ? "border-bottom: 3px solid yellowgreen; margin: 1.5vh" : "margin: 1.5vh"}
+        />
 
-        <img 
-            class="logo {selectedEngine === 'appleMusicSearch' ? 'selected-logo' : ''}" 
-            src={AppleMusicSvg} 
-            alt="appleMusicSearch" 
-            on:click={() => selectImage('appleMusicSearch')} 
-            on:keydown={() => selectImage('appleMusicSearch')} 
-        >
+        <Icon 
+            src={FaBrandsApple}
+            size={selectedEngine === 'appleMusicSearch' ? "4vh" : "5vh"}
+            onClick={() => selectImage('appleMusicSearch')}
+            color={"pink"}
+            style={selectedEngine === 'appleMusicSearch' ? "border-bottom: 3px solid yellowgreen; margin: 1.5vh; margin-right: 2vh;" : "margin: 1.5vh; margin-right: 2vh;"}
+        />
 
         <MenuButton bind:phoneQueueVisible={phoneQueueVisible} />
 
@@ -214,11 +215,6 @@
         border-bottom: solid 2px #242424;
         display: flex;
         align-items: center;
-    }
-    .logo{
-        margin: 2vh;
-        height: 5vh;
-        cursor: pointer;
     }
     .selected-logo {
         border: 3px solid yellowgreen;
