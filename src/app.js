@@ -11,6 +11,7 @@ class ClientEmitter extends EventEmitter { }
 const clientEmitter = new ClientEmitter();
 const fs = require('fs');
 const path = require('path');
+const getAppStatus = require('./middlewares/get-app-status')
 require('dotenv').config();
 
 // DISCORD
@@ -144,70 +145,9 @@ const io = new Server(server, {
 
 io.on('connection', (socket) => {
 
-  // Generate the appStatus for the socket clients
-  const sendUpdate = (updatedClient, discordGuild) => {
-
-    const guild = client.guilds.cache.get(discordGuild);
-    const botMember = guild ? guild.members.cache.get(client.user.id) : null;
-    const botNickname = botMember ? botMember.nickname : null;
-
-    if (client.queues[discordGuild]) {
-      const currentTrack = client.queues[discordGuild].currentTrack;
-      const progressBar = client.queues[discordGuild].node.createProgressBar({ separator: "", indicator: "", length: 1 });
-      const times = progressBar && progressBar.split(" ");
-      const currentDuration = progressBar && times[0];
-      const currentTrackData = {
-        id: currentTrack && currentTrack.id,
-        title: currentTrack && currentTrack.title,
-        description: currentTrack && currentTrack.duration,
-        author: currentTrack && currentTrack.author,
-        url: currentTrack && currentTrack.url,
-        thumbnail: currentTrack && currentTrack.thumbnail,
-        duration: currentTrack && currentTrack.duration,
-        currentDuration: currentDuration, // ----
-        durationMS: currentTrack && currentTrack.durationMS,
-        views: currentTrack && currentTrack.views,
-        requestedBy: currentTrack && currentTrack.requestedBy,
-        playlist: currentTrack && currentTrack.playlist
-      }
-
-      const tracks = updatedClient.queues[discordGuild].tracks.toArray();
-      const fullQueue = [currentTrack, ...tracks];
-      const volumeString = updatedClient.queues[discordGuild].filters.volume ? updatedClient.queues[discordGuild].filters.volume.toString() : 0;
-      const volumeNumber = volumeString && parseInt(volumeString.replace('%', ''), 10);
-      const volume = volumeNumber && volumeNumber;
-      let isPlaying
-      if (client.queues[discordGuild].node.isPaused())
-        isPlaying = false
-      else {
-        isPlaying = client.queues[discordGuild].isPlaying();
-      }
-      const connectedChannel = client.queues[discordGuild].channel;
-      const isShuffling = client.queues[discordGuild].isShuffling;
-      const isRepeating = client.queues[discordGuild].repeatMode;
-
-      socket.to(discordGuild).emit('updateVariable', {
-        currentTrack: currentTrackData,
-        tracks: fullQueue,
-        volume,
-        isPlaying,
-        channel: connectedChannel ? connectedChannel.id : null,
-        shuffle: isShuffling,
-        repeat: isRepeating,
-        botNickname: botNickname
-      });
-    } else {
-      socket.to(discordGuild).emit('updateVariable', {
-        currentTrack: "",
-        tracks: [],
-        volume: client.defaultVolume,
-        isPlaying: null,
-        channel: null,
-        shuffle: null,
-        repeat: null,
-        botNickname: botNickname ? botNickname : null
-      });
-    }
+  const sendUpdate = async (updatedClient, discordGuild) => {
+    const appStatus = await getAppStatus(updatedClient, discordGuild);
+    socket.to(discordGuild).emit('updateVariable', appStatus);
   };
 
   const updateAllSocketRooms = (updatedClient) => {

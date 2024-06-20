@@ -332,6 +332,7 @@
     appearance: none;
     width: 25px;
     height: 25px;
+    background: yellowgreen;
     cursor: pointer;
   }
 
