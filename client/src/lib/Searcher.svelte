@@ -69,7 +69,7 @@
     }
     if (channel) {
       try {
-        await playSong(searchQuery, appStatus.channel && appStatus.channel);
+        await playSong(searchQuery, channel);
       } catch (error) {
         showNotification("Not valid link", "error");
         searchQuery = "";
