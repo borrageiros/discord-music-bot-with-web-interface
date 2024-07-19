@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const { Player } = require('discord-player');
 const { Client, EmbedBuilder, GatewayIntentBits, ActivityType, Collection } = require('discord.js');
+const { YoutubeiExtractor } = require("discord-player-youtubei");
+const { SpotifyExtractor, SoundCloudExtractor, AppleMusicExtractor } = require('@discord-player/extractor');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const http = require('http');
@@ -25,15 +27,14 @@ global.client = new Client({
   ],
   disableMentions: 'everyone',
 });
-const player = new Player(client, {
-  ytdlOptions: {
-    quality: 'highestaudio',
-    highWaterMark: 1 << 25
-  }
-});
+const player = new Player(client, {});
 client.player = player;
 client.defaultVolume = 30;
-client.player.extractors.loadDefault();
+client.player.extractors.unregisterAll();
+client.player.extractors.register(YoutubeiExtractor, {});
+client.player.extractors.register(SpotifyExtractor, {});
+client.player.extractors.register(SoundCloudExtractor, {});
+client.player.extractors.register(AppleMusicExtractor, {});
 client.queues = [];
 client.sockets = [];
 

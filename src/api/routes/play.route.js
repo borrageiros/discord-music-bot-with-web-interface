@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { QueryType, Track } = require('discord-player');
+const { Track } = require('discord-player');
 const { client, clientEmitter } = require('../../app');
 const { GuildQueue } = require('discord-player');
 
@@ -33,7 +33,7 @@ router.post('/', async (req, res) => {
     }
     
     try {
-        const searcher = await client.player.search(url, {searchEngine: QueryType.AUTO});
+        const searcher = await client.player.search(url, {});
 
         if ( searcher.playlist ) {
             searcher.tracks.forEach(function(song) {
