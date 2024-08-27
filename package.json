@@ -11,10 +11,11 @@
     "build:client": "cd client && yarn build",
     "dev": "concurrently \"yarn dev:server\" \"yarn dev:client\"",
     "dev:client": "cd client && yarn dev",
-    "dev:server": "nodemon"
+    "dev:server": "nodemon",
+    "update-dependencies": "ncu -u"
   },
   "dependencies": {
-    "@discord-player/extractor": "^4.5.0",
+    "@discord-player/extractor": "^4.5.1",
     "@discordjs/opus": "^0.9.0",
     "@discordjs/voice": "^0.17.0",
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
@@ -22,11 +23,12 @@
     "concurrently": "^8.2.2",
     "cors": "^2.8.5",
     "discord-player": "^6.7.1",
-    "discord-player-youtubei": "^1.2.4",
+    "discord-player-youtubei": "^1.2.6",
     "discord.js": "^14.15.3",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "mediaplex": "^0.0.9",
+    "npm-check-updates": "^17.1.0",
     "opusscript": "^0.1.1",
     "socket.io": "^4.7.5",
     "ytdl-core": "^4.11.5"
