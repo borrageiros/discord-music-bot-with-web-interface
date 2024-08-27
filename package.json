@@ -12,7 +12,7 @@
     "dev": "concurrently \"yarn dev:server\" \"yarn dev:client\"",
     "dev:client": "cd client && yarn dev",
     "dev:server": "nodemon",
-    "update-dependencies": "ncu -u"
+    "update-dependencies": "ncu -u --filter '@discord-player/extractor,discord-player-youtubei'"
   },
   "dependencies": {
     "@discord-player/extractor": "^4.5.1",
