@@ -242,6 +242,7 @@
             img={track.thumbnail}
             arrayPosition={index}
             isLastItem={index === results.length - 1}
+            isYoutube={selectedEngine === "youtube"}
             on:remove={() => removeSong(track.id)}
             {handleSuccessfullyAddTrack}
           />

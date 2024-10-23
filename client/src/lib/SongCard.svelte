@@ -6,7 +6,7 @@
   import Icon from "./Icon.svelte";
   import Loader from "./LoaderSvg.svelte";
   // @ts-ignore
-  import { FaSolidCircleArrowUp, FaSolidCircleArrowDown, FaSolidTrashCan, FaSolidPlay } from "svelte-icons-pack/fa";
+  import { FaSolidCircleArrowUp, FaSolidCircleArrowDown, FaSolidTrashCan, FaSolidPlay, FaSolidDownload, FaSolidChevronDown, FaSolidVideo, FaSolidFileAudio } from "svelte-icons-pack/fa";
 
   export let id,
     title,
@@ -19,6 +19,7 @@
     arrayPosition,
     isLastItem;
   export let handleSuccessfullyAddTrack = null;
+  export let isYoutube = false;
   let isLoading;
 
   import {
@@ -27,6 +28,7 @@
     getCurrentTrack,
     skip,
     getAppStatus,
+    downloadYouTube,
   } from "../api";
 
   let isCurrentTrack = false;
@@ -105,15 +107,37 @@
   async function handleMoveTrack(from, to) {
     await moveTrack(from - 1, to - 1);
   }
+
+  let showDownloadOptions = false;
+
+  async function handleDownload(type) {
+    isLoading = true;
+    showNotification("Downloading...", "success");
+    if (isYoutube) {
+      try {
+        await downloadYouTube(url, type, title);
+        showNotification("Downloaded", "success");
+      } catch (error) {
+        console.error('🔴 Error downloading:', error);
+        showNotification("Error downloading", "error");
+      }
+    }
+    showDownloadOptions = false;
+    isLoading = false;
+  }
+
+  function toggleDownloadOptions() {
+    showDownloadOptions = !showDownloadOptions;
+  }
 </script>
 
-<div
-  class="track-card"
-  style={!isQueue && "cursor: pointer;"}
-  on:click={handleDivClick}
-  on:keydown={handleDivClick}
->
-  <div class="track-info-container">
+<div class="track-card" >
+  <div
+    class="track-info-container"
+    style={!isQueue && "cursor: pointer;"}
+    on:click={handleDivClick}
+    on:keydown={handleDivClick}
+  >
     <img class="track-img" src={img} alt="" />
     <div class="track-info">
       <p class="track-title">{title}</p>
@@ -146,6 +170,24 @@
       </div>
     {/if}
   {:else if !isLoading}
+    {#if isYoutube && !isLive}
+      <div class="download-container">
+        <Icon src={FaSolidDownload} size={"5vh"} onClick={toggleDownloadOptions} color={"blue"} style={"margin-right: 1vw"} />
+        <Icon src={FaSolidChevronDown} size={"2vh"} onClick={toggleDownloadOptions} color={"blue"} style={"margin-right: 3vw"} />
+        {#if showDownloadOptions}
+          <div class="download-options">
+            <button class="download-button" on:click={() => handleDownload('video')}>
+              <Icon src={FaSolidVideo} size={"3vh"} color={"white"} />
+              <span>Video</span>
+            </button>
+            <button class="download-button" on:click={() => handleDownload('audio')}>
+              <Icon src={FaSolidFileAudio} size={"3vh"} color={"white"} />
+              <span>Audio</span>
+            </button>
+          </div>
+        {/if}
+      </div>
+    {/if}
     <Icon src={FaSolidPlay} size={"5vh"} onClick={handlePlaySong} color={"yellowgreen"} style={"margin-right: 3vw"}/>
   {:else}
     <div class="loader">
@@ -206,5 +248,46 @@
     margin: 2vh;
     margin-right: 3vw;
     cursor: pointer;
+  }
+
+  .download-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .download-options {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #242424;
+    border: 1px solid #444;
+    border-radius: 5px;
+    z-index: 10;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .download-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 8px 16px;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .download-button:hover {
+    background-color: #333;
+  }
+
+  .download-button span {
+    margin-left: 8px;
   }
 </style>

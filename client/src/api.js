@@ -366,3 +366,49 @@ export async function deleteQueue() {
     }
 }
 // --------------------------------------------------------------
+
+
+// --------------------------------------------------------------
+export async function downloadYouTube(videoUrl, format, title) {
+    try {
+        // Sanitizar el título
+        const sanitizedTitle = sanitizeFileName(title);
+
+        const response = await fetch(url + "/youtube-downloader", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                url: videoUrl,
+                format: format, // 'audio' o 'video'
+                title: sanitizedTitle
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+
+        const blob = await response.blob();
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = downloadUrl;
+        a.download = sanitizedTitle + (format === 'audio' ? '.mp3' : '.mp4');
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(downloadUrl);
+        return { success: true, message: 'Downloading...' };
+    } catch (error) {
+        console.error('🔴 Download error:', error);
+        throw error;
+    }
+}
+
+function sanitizeFileName(fileName) {
+    return fileName.replace(/[<>:"/\\|?*\x00-\x1F]/g, '_')
+                   .replace(/^[\s.]+|[\s.]+$/g, '')
+                   .replace(/\s+/g, ' ')
+                   .slice(0, 255);
+}
