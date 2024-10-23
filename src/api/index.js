@@ -17,6 +17,7 @@ const deleteTrack = require('./routes/delete-track.route');
 const deleteQueue = require('./routes/delete-queue.route');
 const getCurrentTrack = require('./routes/get-current-track.route');
 const moveTrack = require('./routes/move-track.route');
+const youtubeDownloader = require('./routes/youtube-downloader.route');
 
 router.use("/", express.static('interface', { 'Content-Type': 'application/javascript' }));
 
@@ -39,7 +40,8 @@ router.get('/docs', (req, res) => {
       searcher: '/api/searcher',
       deleteTrack: '/api/delete-track',
       deleteQueue: '/api/delete-queue',
-      getCurrentTrack: '/api/get-current-track'
+      getCurrentTrack: '/api/get-current-track',
+      youtubeDownloader: '/api/youtube-downloader'
     }
   });
 });
@@ -62,5 +64,5 @@ router.use('/api/delete-track', deleteTrack);
 router.use('/api/delete-queue', deleteQueue);
 router.use('/api/get-current-track', getCurrentTrack);
 router.use('/api/move-track', moveTrack);
-
+router.use('/api/youtube-downloader', youtubeDownloader);
 module.exports = router;
