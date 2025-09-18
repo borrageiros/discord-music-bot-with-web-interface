@@ -1,5 +1,12 @@
+# ❗ **IMPORTANT**   
+> This repository is no longer maintained due to ongoing changes in third-party APIs used to access multimedia content.  
 
-# Discord music bot with web interface
+> For personal use, I built something quite similar — but unlike this project, it doesn’t rely on third-party APIs, so it requires no ongoing maintenance. The code is open source, although it hasn’t been deployed for public access.
+Feel free to check it out:  
+>  
+> https://github.com/borrageiros/DiscordAudioUI  
+
+# 🟣 Discord music bot with web interface
 
 Discord Music Bot with Real-Time Web Interface Using WebSockets
 
@@ -190,4 +197,5 @@ Public responses can be deleted from the chat automatically with the 'DELETE_MES
 
 - **/volume**  
     Change current playing volume  
+
     -👥 Public response
